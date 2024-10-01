@@ -68,6 +68,19 @@
 		</div>
 	</div>
 </div>
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <form action="admin/faculty_excel.php" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Upload Excel File</label>
+                    <input type="file" name="excel_file" id="excel_file" class="form-control" accept=".xlsx, .xls" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload and Import</button>
+            </form>
+        </div>
+    </div>
+</div>
 <style>
 	img#cimg{
 		height: 15vh;

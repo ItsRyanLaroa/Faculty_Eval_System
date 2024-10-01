@@ -50,7 +50,7 @@
           <li class="nav-item dropdown">
             <a href="./index.php?page=class_list" class="nav-link nav-class_list">
               <i class="nav-icon fas fa-chalkboard-teacher"></i>
-              <p>Section</p>
+              <p>Class list</p>
             </a>
           </li> 
           <li class="nav-item dropdown">

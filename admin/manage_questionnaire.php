@@ -22,10 +22,16 @@ function ordinal_suffix($num){
 	.card-info:not(.card-outline)>.card-header {
     background-color: #b31b1b;
 }
-.bg-gradient-primary {
-    background: #007BFF linear-gradient(180deg, #B31B1A, #b31b1b) repeat-x !important;
+
+.bg-gradient-secondary {
+    background: #B31B1C linear-gradient(182deg, #b31b1b, #dc3545) repeat-x !important;
     color: #fff;
 }
+.bg-gradient-success {
+    background: #1b1b1b linear-gradient(180deg, #1b1b1b, #1b1b1b) repeat-x !important;
+    color: #fff;
+}
+
 </style>
 
 <div class="container-fluid">

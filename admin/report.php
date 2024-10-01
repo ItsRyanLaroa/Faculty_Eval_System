@@ -112,6 +112,10 @@ function ordinal_suffix($num){
 	</div>
 </div>
 <style>
+	.bg-gradient-secondary {
+    background: #B31B1C linear-gradient(182deg, #b31b1b, #dc3545) repeat-x !important;
+    color: #fff;
+}
 	.list-group-item:hover{
 		color: black !important;
 		font-weight: 700 !important;
@@ -125,6 +129,7 @@ function ordinal_suffix($num){
 </style>
 <noscript>
 	<style>
+		
 		table{
 			width:100%;
 			border-collapse: collapse;

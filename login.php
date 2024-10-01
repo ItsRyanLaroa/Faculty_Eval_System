@@ -19,7 +19,7 @@ header("location:index.php?page=home");
 
 ?>
 <?php include 'header.php' ?>
-
+<link rel="stylesheet" href="Css/homepage.css">
 <head>
 <style>
     body {
@@ -44,6 +44,7 @@ header("location:index.php?page=home");
       pointer-events: none;
     }
     .login-box {
+      margin-top: 100px;
       position: relative;
       z-index: 2; 
       background-color: rgba(255, 255, 255, 0.8); 
@@ -71,13 +72,100 @@ header("location:index.php?page=home");
       background-color: red;
       width: 120px;
     }
+     /* Navbar Styles */
+.navbar {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo img {
+  margin-right: 15px; /* Space between the image and text */
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo_title {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.logo_subtitle {
+  color: black;
+  font-size: 14px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-links a {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: red;
+}
+
+body {
+  padding-top: 70px; /* To ensure content doesn't overlap with fixed navbar */
+}
+
+.bg-black {
+  background-color: black;
+}
   </style>
 </head>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="navbar-logo">
+    <a href="homepage.php">
+      <img src="images/feslogo.png" width="70" height="70" alt="FES Logo">
+    </a>
+    <div class="logo-text">
+      <span class="logo_title">Faculty Evaluation System</span>
+      <span class="logo_subtitle">St. Cecilia's College, Cebu - Inc.</span>
+    </div>
+  </div>
+  <ul class="nav-navbar">
+    <li><a href="index.php">Home</a></li>
+    <li><a href="about-us.php">About</a></li>
+    <li><a href="register.php">Sign up</a></li>
+  </ul>
+</div>
 
 <body class="hold-transition login-page bg-black">
 
 <div class="login-box">
-<h2><b><?php echo $_SESSION['system']['name'] ?> </b></h2>
+  
+<h3><b><?php echo $_SESSION['system']['name'] ?> </b></h3>
   <div class="login-logo">
     <img src="images/file.png"  style="width: 150px;">
     <!-- <a href="#" class="text-dark">Login</a> -->

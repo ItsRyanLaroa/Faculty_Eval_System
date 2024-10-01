@@ -83,6 +83,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
     <link rel="stylesheet" href="Css/registration.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <style>
         .invalid-input {
@@ -217,11 +218,124 @@ $conn->close();
         text-decoration: none;
         font-size: 13px;
         }
+        .navbar {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo img {
+  margin-right: 15px; /* Space between the image and text */
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo_title {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.logo_subtitle {
+  color: black;
+  font-size: 14px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-links a {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: red;
+}
+.nav-navbar {
+  list-style: none;
+  display: flex;
+  gap: 50px;
+}
+
+.nav-navbar li {
+  padding: 10px;
+}
+
+.nav-navbar li a {
+  position: relative;
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: bold;
+  color: #123b37;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  padding: 0 10px;
+}
+
+.nav-navbar li a:after {
+  content: "";
+  position: absolute;
+  background-color: #123b37;
+  height: 3px;
+  width: 0;
+  left: 0;
+  bottom: -20px;
+  transition: 0.2s;
+}
+
+.nav-navbar li a:hover:after {
+  width: 100%;
+}W
+body {
+  padding-top: 70px; /* To ensure content doesn't overlap with fixed navbar */
+}
+
+.bg-black {
+  background-color: black;
+}
 
     </style>
 </head>
 <body>
 <main>  
+<div class="navbar">
+  <div class="navbar-logo">
+    <a href="homepage.php">
+      <img src="images/feslogo.png" width="70" height="70" alt="FES Logo">
+    </a>
+    <div class="logo-text">
+      <span class="logo_title">Faculty Evaluation System</span>
+      <span class="logo_subtitle">St. Cecilia's College, Cebu - Inc.</span>
+    </div>
+  </div>
+  <ul class="nav-navbar">
+    <li><a href="index.php">Home</a></li>
+    <li><a href="about-us.php">About</a></li>
+    <li><a href="register.php">Sign up</a></li>
+  </ul>
+</div>
       <!-- <header>
             <nav class="nav container">
                 <div class="title">

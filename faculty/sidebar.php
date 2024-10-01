@@ -30,12 +30,7 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a href="./index.php?page=evaluate" class="nav-link nav-evaluate">
-                        <i class="nav-icon fas fa-check-circle"></i>
-                        <p>Evaluate</p>
-                    </a>
-                </li>
+      
                 <li class="nav-item dropdown">
                     <a href="./index.php?page=result" class="nav-link nav-result">
                         <i class="nav-icon fas fa-th-list"></i>

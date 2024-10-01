@@ -25,7 +25,7 @@
 				<thead>
 					<tr>
 						<th class="text-center">#</th>
-						<th>Class</th>
+						<th>class</th>
 						<th>Action</th>
 					</tr>
 				</thead>

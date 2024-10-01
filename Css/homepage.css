@@ -1,0 +1,297 @@
+/* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.header .container {
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+header {
+  padding: 20px 20px;
+}
+
+/* Navbar Styles */
+.navbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 200px 0 100px;
+  margin: 20px auto;
+}
+
+a.navbar-logo {
+  height: 70px;
+  margin-right: 20px;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+span.logo_title {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 30px;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+
+span.logo_subtitle {
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 20px;
+}
+
+.nav-navbar {
+  list-style: none;
+  display: flex;
+  gap: 50px;
+}
+
+.nav-navbar li {
+  padding: 10px;
+}
+
+.nav-navbar li a {
+  position: relative;
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: bold;
+  color: #123b37;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  padding: 0 10px;
+}
+
+.nav-navbar li a:after {
+  content: '';
+  position: absolute;
+  background-color: #123b37;
+  height: 3px;
+  width: 0;
+  left: 0;
+  bottom: -20px;
+  transition: 0.2s;
+}
+
+.nav-navbar li a:hover:after {
+  width: 100%;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  .navbar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 20px;
+  }
+  .nav-navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+  a.navbar-logo {
+    height: 50px;
+  }
+  span.logo_title {
+    font-size: 24px;
+  }
+  span.logo_subtitle {
+    font-size: 16px;
+  }
+  .nav-navbar li a {
+    font-size: 18px;
+  }
+}
+
+/* Pattern and Layout */
+.pattern {
+  position: relative;
+  background: url(../images/cubepattern.jpg);
+  background-position: left top;
+  background-repeat: repeat;
+  background-size: 1920px auto;
+  overflow: hidden;
+}
+
+.pattern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.pattern .container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  text-align: left;
+  z-index: 9;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 0 50px;
+}
+
+/* Responsive Pattern */
+@media (max-width: 1024px) {
+  .pattern .container {
+    flex-direction: column;
+    margin: 0 20px;
+  }
+}
+
+/* Columns */
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.left-column {
+  flex: 1;
+  max-width: 850px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+.right-column {
+  flex: 1;
+  max-width: 1000px;
+  height: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+/* Responsive Columns */
+@media (max-width: 1024px) {
+  .row {
+    flex-direction: column;
+  }
+  .left-column,
+  .right-column {
+    max-width: 100%;
+  }
+}
+
+/* Buttons */
+.button {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin: 0 100px;
+}
+
+button {
+  padding: 10px 25px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  text-align: center;
+}
+
+.logBtn,
+.regBtn {
+  margin: 15px;
+  background-color: #123b37;
+}
+
+/* Responsive Buttons */
+@media (max-width: 768px) {
+  .button {
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 20px;
+  }
+  button {
+    width: 100%;
+    padding: 15px;
+  }
+}
+
+/* Slides */
+.slides {
+  width: 500%;
+  height: 480px;
+  display: flex;
+}
+
+.slides input {
+  display: none;
+}
+
+.slide {
+  width: 20%;
+  transition: 2s;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+}
+
+.navigation-manual {
+  position: absolute;
+  width: 1000px;
+  margin-top: -10px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Footer */
+.footer-container {
+  min-height: 20px;
+  padding: 18px 40px;
+  opacity: 0.7;
+}
+
+.footer-pattern {
+  position: relative;
+  background: url(../images/cubepattern.jpg);
+  background-position: left top;
+  background-repeat: repeat;
+  background-size: 1920px auto;
+  height: auto;
+  padding: 10px;
+  overflow: hidden;
+  mix-blend-mode: multiply;
+}
+
+.footer-pattern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+}
