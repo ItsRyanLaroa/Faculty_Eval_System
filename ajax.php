@@ -62,11 +62,11 @@ if($action == 'delete_subject'){
 	if($save)
 		echo $save;
 }
-if($action == 'save_class'){
-	$save = $crud->save_class();
-	if($save)
-		echo $save;
-}
+// if($action == 'save_class'){
+// 	$save = $crud->save_class();
+// 	if($save)
+// 		echo $save;
+// }
 if($action == 'delete_class'){
 	$save = $crud->delete_class();
 	if($save)
@@ -163,11 +163,11 @@ if($action == 'save_staff_evaluation'){
 		echo $save;
 }
 
-if($action == 'get_class'){
-	$get = $crud->get_class();
-	if($get)
-		echo $get;
+if ($action == 'save_class') {
+    $save = $crud->save_class();
+    echo $save;
 }
+
 if($action == 'get_report'){
 	$get = $crud->get_report();
 	if($get)

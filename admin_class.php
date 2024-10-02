@@ -299,31 +299,58 @@ function login(){
 	function save_class(){
 		extract($_POST);
 		$data = "";
+		
+		// Build the SQL data string, excluding certain keys and non-numeric values
 		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id','user_ids')) && !is_numeric($k)){
+			if(!in_array($k, array('id', 'user_ids', 'teacher_id', 'subject_id', 'class_code')) && !is_numeric($k)){
 				if(empty($data)){
 					$data .= " $k='$v' ";
-				}else{
+				} else {
 					$data .= ", $k='$v' ";
 				}
 			}
 		}
-		$chk = $this->db->query("SELECT * FROM class_list where (".str_replace(",",'and',$data).") and id != '{$id}' ")->num_rows;
-		if($chk > 0){
-			return 2;
+	
+		// Add teacher_id and subject_id to the data string
+		if(isset($teacher_id)){
+			$data .= ", teacher_id='$teacher_id' ";
 		}
-		if(isset($user_ids)){
-			$data .= ", user_ids='".implode(',',$user_ids)."' ";
+		
+		if(isset($subject_id)){
+			$data .= ", subject_id='$subject_id' ";
 		}
+	
+		// Generate a random class code for student enrollment if adding a new class
 		if(empty($id)){
-			$save = $this->db->query("INSERT INTO class_list set $data");
-		}else{
-			$save = $this->db->query("UPDATE class_list set $data where id = $id");
+			$class_code = substr(md5(uniqid(mt_rand(), true)), 0, 8);  // Generate an 8-character code
+			$data .= ", class_code='$class_code' ";
 		}
+	
+		// Check if class already exists, excluding the current record if updating
+		$chk = $this->db->query("SELECT * FROM class_list WHERE (".str_replace(",", ' AND ', $data).") AND id != '{$id}'")->num_rows;
+		if($chk > 0){
+			return 2; // Class already exists
+		}
+	
+		// If there are user IDs (optional)
+		if(isset($user_ids)){
+			$data .= ", user_ids='".implode(',', $user_ids)."' ";
+		}
+	
+		// Insert new class if no ID is provided, otherwise update existing class
+		if(empty($id)){
+			$save = $this->db->query("INSERT INTO class_list SET $data");
+		} else {
+			$save = $this->db->query("UPDATE class_list SET $data WHERE id = $id");
+		}
+	
+		// Return success or failure
 		if($save){
-			return 1;
+			return 1; // Data saved successfully
 		}
+		return 0; // Error saving data
 	}
+	
 	function delete_class(){
 		extract($_POST);
 		$delete = $this->db->query("DELETE FROM class_list where id = $id");
