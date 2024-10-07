@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve and sanitize input fields
     $firstname = htmlspecialchars(trim($_POST['firstname']));
     $lastname = htmlspecialchars(trim($_POST['lastname']));
-    $identifier = htmlspecialchars(trim($_POST['identifier']));  // Update this field name if necessary
+    $identifier = htmlspecialchars(trim($_POST['identifier']));
     $email = htmlspecialchars(trim($_POST['email']));
     $password = htmlspecialchars(trim($_POST['password']));
     $confirm_password = htmlspecialchars(trim($_POST['confirm_password']));
@@ -34,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Process the avatar upload
     $uploadDir = 'uploads/avatars/';
-    // Check if the directory exists, if not, create it
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
@@ -45,23 +44,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (move_uploaded_file($_FILES['avatar']['tmp_name'], $avatarPath)) {
         // File successfully uploaded
     } else {
-        // Handle the error
         $avatar_error = 'Failed to upload the avatar. Please try again.';
     }
 
     // If there are no errors, proceed with inserting the data into the database
     if (empty($id_error) && empty($email_error) && empty($password_error) && empty($confirm_password_error) && empty($avatar_error)) {
-        // Hash the password using MD5
-        $hashed_password = md5($password);
+        // Use password_hash for better security
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Set the default status to 'pending'
+        $status = 'pending';
 
         // Prepare and bind the SQL statement
-        $stmt = $conn->prepare("INSERT INTO student_list (firstname, lastname, school_id, email, password, avatar) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $firstname, $lastname, $identifier, $email, $hashed_password, $avatarPath);
+        $stmt = $conn->prepare("INSERT INTO student_list (firstname, lastname, school_id, email, password, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssss", $firstname, $lastname, $identifier, $email, $hashed_password, $avatarPath, $status);
 
         // Execute the query
         if ($stmt->execute()) {
             // Redirect to a success page or display a success message
-            echo "Registration successful!";
+            echo "Registration successful! Your status is pending.";
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -75,15 +76,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
-    <link rel="stylesheet" href="Css/registration.css">
-
+    <link rel="stylesheet" href="Css/reg.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <style>
         .invalid-input {
@@ -94,9 +93,7 @@ $conn->close();
             font-size: 0.8em;
         }
         .title {
-            position: relative;
             background-color: rgba(189, 169, 169, 0.5);
-            height: 10vh;
             padding: 10px;
             overflow: hidden;
             color: yellow;
@@ -121,289 +118,86 @@ $conn->close();
         button:hover {
             background-color: #265df2;
         }
-        button.show-modal,
-        .modal-box {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-        .overlay {
-            position: fixed;
-            height: 100%;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 380px;
-            width: 100%;
-            padding: 30px 20px;
-            border-radius: 24px;
-            background-color: #fff;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            transform: translate(-50%, -50%) scale(1.2);
-        }
-        .modal-box.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .modal-box i {
-            font-size: 70px;
-            color: #75d479;
-        }
-        .modal-box h2 {
-            margin-top: 20px;
-            font-size: 25px;
-            font-weight: 500;
-            color: #333;
-        }
-        .modal-box h3 {
-            font-size: 16px;
-            font-weight: 400;
-            color: #333;
-            text-align: center;
-        }
-        .modal-box .buttons {
-            margin-top: 25px;
-        }
-        .modal-box button {
-            font-size: 14px;
-            padding: 6px 12px;
-            margin: 0 10px;
-        }
         .regContainer {
-        display: flex;
-        width: 820px;
-        border: 1px solid black;
-        padding: 25px 30px;
-        margin: auto;
-        color: black;
-        /* background-color: #b31b1b; */
-        z-index: 2;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 750px;
+            display: flex;
+            width: 820px;
+            padding: 25px 30px;
+            margin: auto;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 750px;
         }
         .form .button input {
-        height: 100%;
-        width: 100%;
-        outline: none;
-        font-weight: 500;
-        letter-spacing: 1px;
-        color: #fff;
-        background-color:  #b31b1b;;
+            height: 100%;
+            width: 100%;
+            font-weight: 500;
+            color: #fff;
+            background-color: #b31b1b;
         }
-
         .form .button input:hover {
-        background-color: #ff4242;
+            background-color: #ff4242;
         }
         a {
-        color: blue;
-        text-decoration: none;
-        font-size: 13px;
+            color: #007bff;
+            text-decoration: none;
+            background-color: transparent;
         }
-        .navbar {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 15px;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-logo {
-  display: flex;
-  align-items: center;
-}
-
-.navbar-logo img {
-  margin-right: 15px; /* Space between the image and text */
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.logo_title {
-  color: black;
-  font-weight: bold;
-  font-size: 20px;
-}
-
-.logo_subtitle {
-  color: black;
-  font-size: 14px;
-}
-
-.navbar-links {
-  display: flex;
-  gap: 20px;
-}
-
-.navbar-links a {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-.navbar-links a:hover {
-  color: red;
-}
-.nav-navbar {
-  list-style: none;
-  display: flex;
-  gap: 50px;
-}
-
-.nav-navbar li {
-  padding: 10px;
-}
-
-.nav-navbar li a {
-  position: relative;
-  cursor: pointer;
-  font-size: 24px;
-  font-weight: bold;
-  color: #123b37;
-  text-decoration: none;
-  letter-spacing: 0.5px;
-  padding: 0 10px;
-}
-
-.nav-navbar li a:after {
-  content: "";
-  position: absolute;
-  background-color: #123b37;
-  height: 3px;
-  width: 0;
-  left: 0;
-  bottom: -20px;
-  transition: 0.2s;
-}
-
-.nav-navbar li a:hover:after {
-  width: 100%;
-}W
-body {
-  padding-top: 70px; /* To ensure content doesn't overlap with fixed navbar */
-}
-
-.bg-black {
-  background-color: black;
-}
-
+        a:hover {
+            color: black;
+        }
+        .input-field {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-<main>  
-<div class="navbar">
-  <div class="navbar-logo">
-    <a href="homepage.php">
-      <img src="images/feslogo.png" width="70" height="70" alt="FES Logo">
-    </a>
-    <div class="logo-text">
-      <span class="logo_title">Faculty Evaluation System</span>
-      <span class="logo_subtitle">St. Cecilia's College, Cebu - Inc.</span>
-    </div>
-  </div>
-  <ul class="nav-navbar">
-    <li><a href="index.php">Home</a></li>
-    <li><a href="about-us.php">About</a></li>
-    <li><a href="register.php">Sign up</a></li>
-  </ul>
-</div>
-      <!-- <header>
-            <nav class="nav container">
-                <div class="title">
-                    <h2 class="nav_logo"><a href="#">Faculty Evaluation System</a></h2>
-                </div>
-                <ul class="menu_items">
-                    <li><a href="index.php" class="nav_link">Login</a></li>
-                    <li><a href="register.php" class="nav_link">Register</a></li>
-                </ul>
-                <img src="images/bars.svg" alt="timesicon" id="menu_toggle" />
-            </nav>
-        </header> -->
+    <main>
         <div class="regContainer">
             <form action="register.php" method="post" enctype="multipart/form-data" class="form">
                 <h2 style="color: red;">Registration</h2>
                 <div class="user-details">
                     <div class="input-field">
                         <span class="details">First Name</span>
-                        <input type="text" name="firstname" placeholder="Enter your first name" required />
+                        <input type="text" name="firstname" placeholder="Enter your first name" value="<?php echo htmlspecialchars($firstname); ?>" />
                     </div>
                     <div class="input-field">
                         <span class="details">Last Name</span>
-                        <input type="text" name="lastname" placeholder="Enter your last name" required />
+                        <input type="text" name="lastname" placeholder="Enter your last name" value="<?php echo htmlspecialchars($lastname); ?>" />
                     </div>
                     <div class="input-field">
                         <span class="details">School Id</span>
-                        <input type="text" name="identifier" placeholder="School ID" required />
+                        <input type="text" name="identifier" placeholder="School ID" value="<?php echo htmlspecialchars($identifier); ?>" class="<?php echo !empty($id_error) ? 'invalid-input' : ''; ?>" />
+                        <div class="error-message"><?php echo $id_error; ?></div>
                     </div>
                     <div class="input-field">
                         <span class="details">Email</span>
-                        <input type="email" name="email" placeholder="Enter your email" required />
+                        <input type="email" name="email" placeholder="Enter your email" value="<?php echo htmlspecialchars($email); ?>" class="<?php echo !empty($email_error) ? 'invalid-input' : ''; ?>" />
+                        <div class="error-message"><?php echo $email_error; ?></div>
                     </div>
                     <div class="input-field">
                         <span class="details">Password</span>
-                        <input type="password" name="password" placeholder="Enter your password" required />
+                        <input type="password" name="password" placeholder="Enter your password" class="<?php echo !empty($password_error) ? 'invalid-input' : ''; ?>" />
+                        <div class="error-message"><?php echo $password_error; ?></div>
                     </div>
                     <div class="input-field">
                         <span class="details">Confirm Password</span>
-                        <input type="password" name="confirm_password" placeholder="Confirm your password" required />
+                        <input type="password" name="confirm_password" placeholder="Confirm your password" class="<?php echo !empty($confirm_password_error) ? 'invalid-input' : ''; ?>" />
+                        <div class="error-message"><?php echo $confirm_password_error; ?></div>
                     </div>
                     <div class="input-field">
                         <span class="details">Avatar</span>
-                        <input type="file" name="avatar" accept="image/*" required />
+                        <input type="file" name="avatar" accept="image/*" class="<?php echo !empty($avatar_error) ? 'invalid-input' : ''; ?>" />
+                        <div class="error-message"><?php echo $avatar_error; ?></div>
                     </div>
                 </div>
                 <div class="button">
                     <input type="submit" value="Register" />
                 </div>
-                <p style="text-align:center;"><a href="index.php">Already have account? Login here...</a></p>
+                <p style="text-align:center;"><a href="login.php">Already have an account? Login here!</a></p>
             </form>
         </div>
     </main>
-    <script>
-        const overlay = document.querySelector(".overlay"),
-            closeBtn = document.querySelector(".close-btn"),
-            modalBox = document.querySelector(".modal-box");
-
-        if (modalBox) {
-            overlay.addEventListener("click", () => {
-                overlay.classList.remove("active");
-                modalBox.classList.remove("active");
-            });
-            closeBtn.addEventListener("click", () => {
-                overlay.classList.remove("active");
-                modalBox.classList.remove("active");
-            });
-        }
-    </script>
 </body>
 </html>
-

@@ -707,27 +707,43 @@ function login(){
 		return 1;
 	}
 	
-	function save_evaluation(){
+	function save_evaluation() {
 		extract($_POST);
-		$data = " student_id = {$_SESSION['login_id']} ";
-		$data .= ", academic_id = $academic_id ";
-		$data .= ", subject_id = $subject_id ";
-		$data .= ", class_id = $class_id ";
-		$data .= ", restriction_id = $restriction_id ";
-		$data .= ", faculty_id = $faculty_id ";
-		$save = $this->db->query("INSERT INTO evaluation_list set $data");
+	
+		// Prepare data to insert into evaluation_list
+		$data = "student_id = {$_SESSION['login_id']}, ";
+		$data .= "academic_id = $academic_id, ";
+		$data .= "subject_id = $subject_id, ";
+		$data .= "class_id = $class_id, ";
+		$data .= "restriction_id = $restriction_id, ";
+		$data .= "faculty_id = $faculty_id";
+	
+		// Insert evaluation into evaluation_list
+		$save = $this->db->query("INSERT INTO evaluation_list SET $data");
+		
+		// Check if save was successful
 		if($save){
-			$eid = $this->db->insert_id;
+			$eid = $this->db->insert_id; // Get the inserted evaluation ID
+	
+			// Insert answers into evaluation_answers table
 			foreach($qid as $k => $v){
-				$data = " evaluation_id = $eid ";
-				$data .= ", question_id = $v ";
-				$data .= ", rate = {$rate[$v]} ";
-				$ins[] = $this->db->query("INSERT INTO evaluation_answers set $data ");
+				$data = "evaluation_id = $eid, ";
+				$data .= "question_id = $v, ";
+				$data .= "rate = {$rate[$v]}";
+	
+				$ins[] = $this->db->query("INSERT INTO evaluation_answers SET $data");
 			}
+	
+			// Check if answers were inserted successfully
 			if(isset($ins))
-				return 1;
+				return 1; // Success
+			else
+				return 0; // Failed to insert answers
+		} else {
+			return 0; // Failed to insert evaluation
 		}
 	}
+	
 	function save_staff_evaluation(){
 		extract($_POST);
 		$data = " student_id = {$_SESSION['login_id']} ";
@@ -786,6 +802,7 @@ function login(){
 		return json_encode($data);
 
 	}
+	
 
 	function get_staff_class(){
 		extract($_POST);

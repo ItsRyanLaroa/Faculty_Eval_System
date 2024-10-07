@@ -129,7 +129,6 @@ function ordinal_suffix($num){
 </style>
 <noscript>
 	<style>
-		
 		table{
 			width:100%;
 			border-collapse: collapse;

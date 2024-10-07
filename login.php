@@ -13,7 +13,7 @@ foreach($system as $k => $v){
 // }
 ob_end_flush();
 ?>
-<?php 
+<?php
 if(isset($_SESSION['login_id']))
 header("location:index.php?page=home");
 
@@ -24,24 +24,25 @@ header("location:index.php?page=home");
 <style>
     body {
       position: relative;
-      background-image: url('images/img.png');
+      background-image: url('images/cubepattern.jpg');
+      background-position: left top;
       background-repeat: no-repeat;
       background-size: cover;
       height: 100vh;
       padding: 120px;
-      overflow: hidden; /* Ensure the pseudo-element does not overflow */
+      overflow: hidden;
       margin: 0;
     }
     body::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(179, 27, 27, 0.3); 
-      z-index: 1; 
-      pointer-events: none;
+      content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  opacity: 0.7;
+  pointer-events: none;
     }
     .login-box {
       margin-top: 100px;
@@ -138,13 +139,8 @@ body {
 }
   </style>
 </head>
-
-</head>
-
-<body>
-
 <!-- Navbar -->
-<div class="navbar">
+<!-- <div class="navbar">
   <div class="navbar-logo">
     <a href="homepage.php">
       <img src="images/feslogo.png" width="70" height="70" alt="FES Logo">
@@ -159,7 +155,11 @@ body {
     <li><a href="about-us.php">About</a></li>
     <li><a href="register.php">Sign up</a></li>
   </ul>
-</div>
+</div> -->
+</head>
+
+<body>
+
 
 <body class="hold-transition login-page bg-black">
 
@@ -195,7 +195,8 @@ body {
       <button type="submit" class="btn">Sign In</button>
     </div>
   </div>
-  <p style="margin-left:70px; margin-top:10px;">Don't have an account? <a href="register.php">Register here</a></p>
+  <p style="text-align: center; margin-top: 10px;">Don't have an account? <a href="register.php">Register here!</a></p>
+  <p style="text-align: center;">Go back to site? <a href="homepage.php">Click here!</a></p>
 </form>
     </div>
     <!-- /.login-card-body -->

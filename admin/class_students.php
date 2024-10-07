@@ -1,16 +1,26 @@
-<?php include'db_connect.php' ?>
+<?php include 'db_connect.php'; ?>
 <?php 
 if(isset($_GET['id'])){
     $id = $_GET['id'];
-    // Modify the query to also fetch the class_code
-    $class_qry = $conn->query("SELECT concat(curriculum, ' ', level, '-', section) as class, class_code FROM class_list WHERE id = $id");
+    // Modify the query to also fetch the class_code, teacher's name, and subject code (which is the subject name)
+    $class_qry = $conn->query("SELECT concat(c.curriculum, ' ', c.level, '-', c.section) as class, c.class_code, 
+                                      t.firstname as teacher_firstname, t.lastname as teacher_lastname, 
+                                      s.code as subject_name 
+                               FROM class_list c
+                               JOIN faculty_list t ON c.teacher_id = t.id 
+                               JOIN subject_list s ON c.subject_id = s.id
+                               WHERE c.id = $id");
     if($class_qry->num_rows > 0) {
         $class_data = $class_qry->fetch_assoc();
         $class_name = $class_data['class'];
         $class_code = $class_data['class_code'];
+        $teacher_name = $class_data['teacher_firstname'] . ' ' . $class_data['teacher_lastname'];
+        $subject_name = $class_data['subject_name']; // Fetch subject code as the subject name
     } else {
         $class_name = 'N/A';
         $class_code = 'N/A';
+        $teacher_name = 'N/A';
+        $subject_name = 'N/A';
     }
 } else {
     echo "No class ID specified.";
@@ -20,10 +30,14 @@ if(isset($_GET['id'])){
 <div class="col-lg-12">
     <div class="card card-outline card-success">
         <div class="card-header">
-            <!-- Use divs for class name and class code, both in the same line -->
+            <!-- Use divs for class name, class code, teacher name, and subject name -->
             <div class="class-details">
                 <span class="class-name">Class: <?php echo $class_name; ?></span>
                 <span class="class-code">Class Code: <?php echo $class_code; ?></span>
+            </div>
+            <div class="teacher-details">
+                <span class="teacher-name">Teacher: <?php echo $teacher_name; ?></span>
+                <span class="subject-name"> | Subject: <?php echo $subject_name; ?></span>
             </div>
             <div class="card-tools">
                 <a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_student"><i class="fa fa-plus"></i> Add New Student</a>
@@ -43,7 +57,12 @@ if(isset($_GET['id'])){
                 <tbody>
                     <?php
                     $i = 1;
-                    $qry = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM student_list WHERE id = $id ORDER BY concat(firstname,' ',lastname) ASC");
+                    // Modify the query to only fetch students belonging to the class
+                    $qry = $conn->query("SELECT s.*, concat(s.firstname, ' ', s.lastname) as name 
+                                         FROM student_list s 
+                                         INNER JOIN class_list e ON s.class_id = e.id 
+                                         WHERE e.id = $id 
+                                         ORDER BY concat(s.firstname,' ',s.lastname) ASC");
                     while($row= $qry->fetch_assoc()):
                     ?>
                     <tr>
@@ -86,8 +105,22 @@ if(isset($_GET['id'])){
     .class-code {
         color: #555;  /* Make the class code a lighter shade */
     }
-</style>
 
+    .teacher-details {
+        margin-top: 10px;  /* Add some space between class details and teacher name */
+        font-size: 16px;
+    }
+
+    .teacher-name {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .subject-name {
+        font-size: 16px;
+        color: #666;
+    }
+</style>
 
 <script>
     $(document).ready(function(){

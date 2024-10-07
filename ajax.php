@@ -173,6 +173,11 @@ if($action == 'get_report'){
 	if($get)
 		echo $get;
 }
+if($action == 'get_class'){
+	$get = $crud->get_class();
+	if($get)
+		echo $get;
+}
 if($action == 'get_staff_class'){
 	$get = $crud->get_staff_class();
 	if($get)

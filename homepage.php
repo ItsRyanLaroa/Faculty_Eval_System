@@ -1,39 +1,37 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Evaluation System</title>
-    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="Css/homepage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    
 </head>
 <body>
-<header>
+    <header>
         <div class="container">
             <div class="navbar-header">
                 <a href="homepage.php" class="navbar-logo">
                     <img src="images/feslogo.png" width="70" height="70">
                 </a>
-                <div class="logo-text">
-                    <span class="logo_title">
-                        Faculty Evaluation System
-                    </span>
-                    <span class="logo_subtitle">
-                        St. Cecilia's College, Cebu - Inc.
-                    </span>
+                <a href="homepage.php" class="logo-text">
+                    <span class="logo_title">Faculty Evaluation System</span>
+                    <span class="logo_subtitle">St. Cecilia's College, Cebu - Inc.</span>
+                </a>
+                <div class="navbar-toggler" type="button" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
                 </div>
-                <ul class="nav-navbar">
-                    <li>
-                        <a href="homepage.php">Home</a>
-                    </li>
-                    <li>
-                        <a href="about-us.php">About</a>
-                    </li>
-                    <li>
-                        <a href="#My Account">My Account</a>
-                    </li>
-                </ul>
+                <div class="nav-navbar" id="navbarNav">
+                    <ul>
+                        <li><a href="homepage.php" class="active">Home</a></li>
+                        <li><a href="about-us.php">About</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contacts</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </header>
@@ -42,58 +40,60 @@
         <div class="pattern">
             <div class="container">
                 <div class="row">
-                    <div class="left-column">
-                        <div class="overview">
-                            <h2 style="font-size: 48px; font-weight: bold;">Faculty Evaluation System</h2>
-                            <p style="font-size: 25px;">Students and teachers can now evaluate through this tool.</p>
-                            <ul class="overview-list">
-                                <li>
-                                <i class="fa-solid fa-circle-check"></i>
-                                    Students can evaluate teachers of subjects they enrolled in a semester.
-                                </li>
-                                <li>
-                                <i class="fa-solid fa-circle-check"></i>
-                                    Faculty can evaluate his/her colleagues in his/her respective department.
-                                </li>
-                                <li>
-                                <li>
-                                <i class="fa-solid fa-circle-check"></i>
-                                    Faculty can evaluate their dean's department.
-                                </li>
-                                <li>
-                            </ul>
+                    <div class="columns-container">
+                        <div class="left-column">
+                            <div class="overview">
+                                <h2 style="font-size: 48px; font-weight: bold;">Faculty Evaluation System</h2>
+                                <p style="font-size: 25px;">Students and teachers can now evaluate through this tool.</p>
+                                <ul class="overview-list">
+                                    <li>
+                                    <i class="fa-solid fa-circle-check"></i>
+                                        Students can evaluate teachers of subjects they enrolled in a semester.
+                                    </li>
+                                    <li>
+                                    <i class="fa-solid fa-circle-check"></i>
+                                        Faculty can evaluate his/her colleagues in his/her respective department.
+                                    </li>
+                                    <li>
+                                    <li>
+                                    <i class="fa-solid fa-circle-check"></i>
+                                        Faculty can evaluate their dean's department.
+                                    </li>
+                                    <li>
+                                </ul>
+                            </div>
+                            <div class="button">
+                                <a href="login.php"><button class="logBtn">Login</button></a>
+                                <a href="register.php"><button class="regBtn">Register</button></a>
+                            </div>
                         </div>
-                        <div class="button">
-                            <button class="logBtn">Login</button>
-                            <button class="regBtn">Register</button>
-                        </div>
-                    </div>
-                    <div class="right-column">
-                    <div class="slides">
-                        <input type="radio" name="radio-btn" id="radio1" checked>
-                        <input type="radio" name="radio-btn" id="radio2">
-                        <input type="radio" name="radio-btn" id="radio3">
-                        <div class="slide first">
-                            <img src="images/assessment4.jpg" alt="">
-                        </div>
-                        <div class="slide">
-                            <img src="images/assessment.jpg" alt="">
-                        </div>
-                        <div class="slide">
-                            <img src="images/assessment3.jpg" alt="">
-                        </div>
+                        <div class="right-column">
+                            <div class="slides">
+                                <input type="radio" name="radio-btn" id="radio1" checked>
+                                <input type="radio" name="radio-btn" id="radio2">
+                                <input type="radio" name="radio-btn" id="radio3">
+                                <div class="slide first">
+                                    <img src="images/assessment4.jpg" alt="">
+                                </div>
+                                <div class="slide">
+                                    <img src="images/assessment.jpg" alt="">
+                                </div>
+                                <div class="slide">
+                                    <img src="images/assessment3.jpg" alt="">
+                                </div>
 
-                        <div class="navigation-auto">
-                            <div class="auto-btn1"></div>
-                            <div class="auto-btn2"></div>
-                            <div class="auto-btn3"></div>
+                                <div class="navigation-auto">
+                                    <div class="auto-btn1"></div>
+                                    <div class="auto-btn2"></div>
+                                    <div class="auto-btn3"></div>
+                                </div>
+                            </div>
+                            <div class="navigation-manual">
+                                <label for="radio1" class="manual-btn"></label>
+                                <label for="radio2" class="manual-btn"></label>
+                                <label for="radio3" class="manual-btn"></label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="navigation-manual">
-                        <label for="radio1" class="manual-btn"></label>
-                        <label for="radio2" class="manual-btn"></label>
-                        <label for="radio3" class="manual-btn"></label>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -154,6 +154,13 @@
             counter = 1;
         }
     }, 5000);
+
+    const toggler = document.querySelector('.navbar-toggler');
+    const navbar = document.getElementById('navbarNav');
+
+    toggler.addEventListener('click', () => {
+        navbar.classList.toggle('show');
+    });
 
 </script> 
 </body>

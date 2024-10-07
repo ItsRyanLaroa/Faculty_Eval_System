@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2024 at 04:09 AM
+-- Generation Time: Oct 06, 2024 at 09:51 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -54,17 +54,21 @@ CREATE TABLE `class_list` (
   `id` int(30) NOT NULL,
   `curriculum` text NOT NULL,
   `level` text NOT NULL,
-  `section` text NOT NULL
+  `section` text NOT NULL,
+  `class_code` varchar(10) NOT NULL,
+  `teacher_id` int(10) NOT NULL,
+  `subject_id` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `class_list`
 --
 
-INSERT INTO `class_list` (`id`, `curriculum`, `level`, `section`) VALUES
-(1, 'BSIT', '1', 'A'),
-(2, 'BSIT', '1', 'B'),
-(3, 'BSIT', '1', 'C');
+INSERT INTO `class_list` (`id`, `curriculum`, `level`, `section`, `class_code`, `teacher_id`, `subject_id`) VALUES
+(1, 'BSIT', '1', 'A', '', 0, ''),
+(2, 'BSIT', '1', 'B', '', 0, ''),
+(3, 'BSIT', '1', 'C', 'ewhrgejwr', 4, '3'),
+(4, 'BSHM-', '1', 'D', 'a2a9a696', 3, '3');
 
 -- --------------------------------------------------------
 
@@ -157,17 +161,18 @@ CREATE TABLE `faculty_list` (
   `email` varchar(200) NOT NULL,
   `password` text NOT NULL,
   `avatar` text NOT NULL DEFAULT 'no-image-available.png',
-  `date_created` datetime NOT NULL DEFAULT current_timestamp()
+  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+  `position` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `faculty_list`
 --
 
-INSERT INTO `faculty_list` (`id`, `school_id`, `firstname`, `lastname`, `email`, `password`, `avatar`, `date_created`) VALUES
-(1, '20140623', 'George', 'Wilson', 'gwilson@sample.com', 'd40242fb23c45206fadee4e2418f274f', '1608011100_avatar.jpg', '2020-12-15 13:45:18'),
-(2, '111942434', 'John', 'Ernest', 'ernest@gmail.com', '200820e3227815ed1756a6b531e7e0d2', '1723637940_PUREDC.png', '2024-08-14 20:19:27'),
-(3, '24234324', 'henry', 'Sy', 'henrySy@gmail.com', '200820e3227815ed1756a6b531e7e0d2', 'no-image-available.png', '2024-08-23 11:17:31');
+INSERT INTO `faculty_list` (`id`, `school_id`, `firstname`, `lastname`, `email`, `password`, `avatar`, `date_created`, `position`) VALUES
+(1, '20140623', 'George', 'Wilson', 'gwilson@sample.com', 'd40242fb23c45206fadee4e2418f274f', '1608011100_avatar.jpg', '2020-12-15 13:45:18', ''),
+(2, '111942434', 'John', 'Ernest', 'ernest@gmail.com', '200820e3227815ed1756a6b531e7e0d2', '1723637940_PUREDC.png', '2024-08-14 20:19:27', ''),
+(3, '24234324', 'henry', 'Sy', 'henrySy@gmail.com', '200820e3227815ed1756a6b531e7e0d2', 'no-image-available.png', '2024-08-23 11:17:31', '');
 
 -- --------------------------------------------------------
 
@@ -195,7 +200,8 @@ INSERT INTO `question_list` (`id`, `academic_id`, `question`, `order_by`, `crite
 (8, 3, '324234', 3, 2, 0),
 (10, 3, '213214', 4, 2, 0),
 (13, 3, '213213', 5, 2, 0),
-(14, 3, 'gdfd', 2, 1, 0);
+(14, 3, 'gdfd', 2, 1, 0),
+(15, 3, 'wqeqwe', 6, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -224,82 +230,6 @@ INSERT INTO `restriction_list` (`id`, `academic_id`, `faculty_id`, `class_id`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `staff_evaluation`
---
-
-CREATE TABLE `staff_evaluation` (
-  `id` int(11) NOT NULL,
-  `staff_id` int(11) NOT NULL,
-  `question_id` int(11) NOT NULL,
-  `rating` int(11) NOT NULL,
-  `student_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `staff_evaluation_answers`
---
-
-CREATE TABLE `staff_evaluation_answers` (
-  `evaluation_id` int(30) NOT NULL,
-  `question_id` int(30) NOT NULL,
-  `rate` int(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `staff_evaluation_answers`
---
-
-INSERT INTO `staff_evaluation_answers` (`evaluation_id`, `question_id`, `rate`) VALUES
-(4, 1, 4),
-(4, 6, 4),
-(4, 14, 3),
-(4, 8, 5),
-(4, 10, 4),
-(4, 13, 5),
-(5, 1, 5),
-(5, 6, 5),
-(5, 14, 5),
-(5, 8, 5),
-(5, 10, 5),
-(5, 13, 5),
-(6, 1, 4),
-(6, 6, 5),
-(6, 14, 4),
-(6, 8, 5),
-(6, 10, 4),
-(6, 13, 5);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `staff_evaluation_list`
---
-
-CREATE TABLE `staff_evaluation_list` (
-  `evaluation_id` int(30) NOT NULL,
-  `academic_id` int(30) NOT NULL,
-  `class_id` int(30) NOT NULL,
-  `student_id` int(30) NOT NULL,
-  `subject_id` int(30) NOT NULL,
-  `restriction_id` int(30) NOT NULL,
-  `date_taken` datetime NOT NULL DEFAULT current_timestamp(),
-  `staff_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `staff_evaluation_list`
---
-
-INSERT INTO `staff_evaluation_list` (`evaluation_id`, `academic_id`, `class_id`, `student_id`, `subject_id`, `restriction_id`, `date_taken`, `staff_id`) VALUES
-(4, 3, 2, 2, 1, 2, '2024-08-30 00:14:12', 2),
-(5, 3, 2, 2, 2, 3, '2024-08-30 00:42:56', 4),
-(6, 3, 2, 2, 3, 5, '2024-08-30 10:00:00', 2);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `staff_list`
 --
 
@@ -323,57 +253,6 @@ INSERT INTO `staff_list` (`id`, `staff_id`, `firstname`, `lastname`, `avatar`, `
 (2, '3242352345', 'Luka', 'Doncic', 'staff-1724116806.png', 'lukaDoncic@gmail.com', '$2y$10$xlHphrco6.TznqtWIVef7O0HD9.RE1RJmmjbc10WPel0t06MkNH22', '2024-08-20 01:20:06', '2024-08-20 01:20:06'),
 (3, '214324345643', 'Kyrie ', 'Irving', 'staff-1724161513.jfif', 'kyrieIrve@gmail.com', '$2y$10$yF44adflYZsDPhJdBfD63.L0dkGjNydqLESvzbN32TrYNfQH.QMYC', '2024-08-20 13:45:13', '2024-08-20 13:45:13'),
 (4, '1324325412', 'Lebron', 'James', 'staff-1724382854.jfif', 'lebron@gmail.com', '$2y$10$WhRi0eMiqN45p2QG18WWGeIaLCxrY0jTntmj/pxR4CddiFRGOW5me', '2024-08-23 03:14:14', '2024-08-23 03:14:14');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `staff_question`
---
-
-CREATE TABLE `staff_question` (
-  `id` int(11) NOT NULL,
-  `staff_id` int(11) NOT NULL,
-  `question` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `staff_question_list`
---
-
-CREATE TABLE `staff_question_list` (
-  `id` int(11) NOT NULL,
-  `staff_id` int(11) NOT NULL,
-  `criteria_id` int(11) NOT NULL,
-  `question` text NOT NULL,
-  `order_by` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `staff_restriction_list`
---
-
-CREATE TABLE `staff_restriction_list` (
-  `id` int(11) NOT NULL,
-  `staff_id` int(11) NOT NULL,
-  `class_id` int(11) NOT NULL,
-  `subject_id` int(11) NOT NULL,
-  `academic_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `staff_restriction_list`
---
-
-INSERT INTO `staff_restriction_list` (`id`, `staff_id`, `class_id`, `subject_id`, `academic_id`) VALUES
-(2, 2, 2, 1, 3),
-(3, 4, 2, 2, 3),
-(4, 3, 2, 1, 3),
-(5, 2, 2, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -518,46 +397,12 @@ ALTER TABLE `restriction_list`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `staff_evaluation`
---
-ALTER TABLE `staff_evaluation`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_evaluation` (`staff_id`,`question_id`,`student_id`);
-
---
--- Indexes for table `staff_evaluation_list`
---
-ALTER TABLE `staff_evaluation_list`
-  ADD PRIMARY KEY (`evaluation_id`);
-
---
 -- Indexes for table `staff_list`
 --
 ALTER TABLE `staff_list`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `staff_id` (`staff_id`),
   ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `staff_question`
---
-ALTER TABLE `staff_question`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `staff_id` (`staff_id`);
-
---
--- Indexes for table `staff_question_list`
---
-ALTER TABLE `staff_question_list`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `staff_id` (`staff_id`),
-  ADD KEY `criteria_id` (`criteria_id`);
-
---
--- Indexes for table `staff_restriction_list`
---
-ALTER TABLE `staff_restriction_list`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `student_list`
@@ -597,7 +442,7 @@ ALTER TABLE `academic_list`
 -- AUTO_INCREMENT for table `class_list`
 --
 ALTER TABLE `class_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `criteria_list`
@@ -621,7 +466,7 @@ ALTER TABLE `faculty_list`
 -- AUTO_INCREMENT for table `question_list`
 --
 ALTER TABLE `question_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `restriction_list`
@@ -630,40 +475,10 @@ ALTER TABLE `restriction_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
--- AUTO_INCREMENT for table `staff_evaluation`
---
-ALTER TABLE `staff_evaluation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `staff_evaluation_list`
---
-ALTER TABLE `staff_evaluation_list`
-  MODIFY `evaluation_id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
 -- AUTO_INCREMENT for table `staff_list`
 --
 ALTER TABLE `staff_list`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `staff_question`
---
-ALTER TABLE `staff_question`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `staff_question_list`
---
-ALTER TABLE `staff_question_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `staff_restriction_list`
---
-ALTER TABLE `staff_restriction_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `student_list`
@@ -688,23 +503,6 @@ ALTER TABLE `system_settings`
 --
 ALTER TABLE `users`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `staff_question`
---
-ALTER TABLE `staff_question`
-  ADD CONSTRAINT `staff_question_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff_list` (`id`);
-
---
--- Constraints for table `staff_question_list`
---
-ALTER TABLE `staff_question_list`
-  ADD CONSTRAINT `staff_question_list_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff_list` (`id`),
-  ADD CONSTRAINT `staff_question_list_ibfk_2` FOREIGN KEY (`criteria_id`) REFERENCES `criteria_list` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -128,20 +128,28 @@ $restriction = $conn->query("SELECT r.id,s.id as sid,f.id as fid,concat(f.firstn
 			uni_modal("Information","<?php echo $_SESSION['login_view_folder'] ?>done.php")
 	})
 	$('#manage-evaluation').submit(function(e){
-		e.preventDefault();
-		start_load()
-		$.ajax({
-			url:'ajax.php?action=save_evaluation',
-			method:'POST',
-			data:$(this).serialize(),
-			success:function(resp){
-				if(resp == 1){
-					alert_toast("Data successfully saved.","success");
-					setTimeout(function(){
-						location.reload()	
-					},1750)
-				}
-			}
-		})
-	})
+    e.preventDefault();
+    start_load();
+
+    $.ajax({
+        url: 'ajax.php?action=save_evaluation',
+        method: 'POST',
+        data: $(this).serialize(),
+        success: function(resp){
+            if(resp == 1){
+                alert_toast("Data successfully saved.", "success");
+                setTimeout(function(){
+                    location.reload(); // Reload to reflect the changes
+                }, 1750);
+            } else {
+                alert_toast("Failed to save evaluation. Please try again.", "error");
+            }
+        },
+        error: function(){
+            alert_toast("An error occurred during the process.", "error");
+            end_load(); // End loading animation if there's an error
+        }
+    });
+});
+
 </script>
