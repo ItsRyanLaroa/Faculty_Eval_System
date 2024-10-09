@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-hover table-bordered" id="list">
+        <table class="table tabe-hover table-bordered styled-table" id="list">
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
@@ -49,6 +49,71 @@
         </div>
     </div>
 </div>
+<style>
+/* Modern table styling */
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    border-bottom-width: 0;
+    border: none;
+    color: #333;
+    font-weight: 500; /* Add slight boldness */
+}
+
+/* Styled table */
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+/* Red table header */
+.card-primary.card-outline {
+    border-top: none;
+}
+
+thead th {
+    background-color: #dc143c;
+    color:  #f3f3f3;
+
+    font-weight: bold;
+}
+.card-success.card-outline {
+    border-top: none;
+}
+/* Card header styling */
+.card-header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: .75rem 1.25rem;
+    position: relative;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+/* Button styles */
+.btn-primary {
+    color: blue;
+    background-color: transparent;
+    border: none;
+}
+
+.btn-danger {
+    color: red;
+	background-color: transparent;
+    border: none;
+}
+/* Hover effect for rows */
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+</style>
+
 <script>
 	$(document).ready(function(){
 	$('.view_faculty').click(function(){

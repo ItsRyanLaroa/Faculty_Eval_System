@@ -13,10 +13,14 @@ function ordinal_suffix1($num){
 }
 $astat = array("Not Yet Started","On-going","Closed");
  ?>
+ <style>
+  h3{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+ </style>
  <div class="col-12">
     <div class="card">
-      <div class="card-body">
-        Welcome <?php echo $_SESSION['login_name'] ?>!
+      <div class="card-body"><h3>Welcome <?php echo $_SESSION['login_name'] ?>!</h3>
         <br>
         <div class="col-md-5">
           <div class="callout callout-info">

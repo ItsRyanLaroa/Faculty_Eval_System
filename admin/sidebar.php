@@ -7,15 +7,15 @@
   <link rel="stylesheet" href="path/to/your/styles.css">
   <style>
     .main-sidebar {
-      background-color: #b31b1b;
+      background-color: #dc143c ;
     }
     .layout-navbar-fixed .wrapper .sidebar-dark-primary .brand-link:not([class*=navbar]) {
-      background-color: #b31b1b;
+      background-color: #dc143c ;
     }
     .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, 
     .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
-      background-color: #000;
-      color: #fff;
+      background-color: #d3d3d3 ;
+      color: #000;
     }
     .sidebar {
       padding: 45px 8px;
@@ -68,7 +68,7 @@
           <li class="nav-item dropdown">
             <a href="./index.php?page=criteria_list" class="nav-link nav-criteria_list">
               <i class="nav-icon fas fa-tasks"></i>
-              <p>Evaluation Criteria</p>
+              <p>Category</p>
             </a>
           </li> 
           <!-- <li class="nav-item dropdown">

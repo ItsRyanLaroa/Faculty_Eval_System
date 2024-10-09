@@ -32,6 +32,7 @@ function ordinal_suffix($num){
     color: #fff;
 }
 
+
 </style>
 
 <div class="container-fluid">

@@ -30,7 +30,7 @@ if(isset($_GET['id'])){
 <div class="col-lg-12">
     <div class="card card-outline card-success">
         <div class="card-header">
-            <!-- Use divs for class name, class code, teacher name, and subject name -->
+           
             <div class="class-details">
                 <span class="class-name">Class: <?php echo $class_name; ?></span>
                 <span class="class-code">Class Code: <?php echo $class_code; ?></span>
@@ -39,9 +39,7 @@ if(isset($_GET['id'])){
                 <span class="teacher-name">Teacher: <?php echo $teacher_name; ?></span>
                 <span class="subject-name"> | Subject: <?php echo $subject_name; ?></span>
             </div>
-            <div class="card-tools">
-                <a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_student"><i class="fa fa-plus"></i> Add New Student</a>
-            </div>
+          
         </div>
         <div class="card-body">
             <table class="table tabe-hover table-bordered" id="list">
@@ -120,6 +118,64 @@ if(isset($_GET['id'])){
         font-size: 16px;
         color: #666;
     }
+    .card-success.card-outline {
+    border-top: none;
+}
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    border-bottom-width: 0;
+    border: none;
+    color: #333; 
+    font-weight: 500; /* Add slight boldness */
+}
+
+/* Table styling */
+table.table-bordered.dataTable {
+    border-right-width: 0;
+    border: none;
+}
+	/* Red table header */
+	.card-primary.card-outline {
+    border-top: none;
+}
+
+
+/* Red table header */
+thead th {
+    background-color: #dc143c ; 
+    color: white; /* White text for contrast */
+    text-align: center;
+    font-weight: bold;
+	
+}
+
+/* Card header styling */
+.card-header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: .75rem 1.25rem;
+    position: relative;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+/* Button styles */
+.btn-primary {
+    color: blue;
+    background-color: white;
+    border: none;
+}
+
+
+.btn-danger {
+    color: red;
+    background-color: white;
+    border: none;
+}
+
+/* Hover effect for rows */
+tbody tr:hover {
+    background-color: #f1f1f1; /* Light gray hover */
+}
 </style>
 
 <script>
@@ -131,8 +187,7 @@ if(isset($_GET['id'])){
         $('.delete_student').click(function(){
             _conf("Are you sure to delete this student?", "delete_student", [$(this).attr('data-id')])
         })
-    })
-    
+    }) 
     function delete_student($id){
         start_load()
         $.ajax({

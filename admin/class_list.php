@@ -7,7 +7,8 @@
 			</div>
 		</div>
 		<div class="card-body">
-			<table class="table tabe-hover table-bordered" id="list">
+		
+			<table class="table tabe-hover table-bordered styled-table" id="list">
 				<colgroup>
 					<col width="5%">
 					<col width="60%">
@@ -36,47 +37,80 @@
 								<button type="button" class="btn btn-danger btn-flat delete_class" data-id="<?php echo $row['id'] ?>">
 									<i class="fas fa-trash"></i>
 								</button>
-								<a class="dropdown-item class_student manage-students-btn" href="index.php?page=class_students&id=<?php echo $row['id'] ?>">Manage </a>
+								<a class="dropdown-item class_student manage-students-btn" href="index.php?page=class_students&id=<?php echo $row['id'] ?>">view</a>
 							</div>
 						</td>
 					</tr>	
-				<?php endwhile; ?>
+					<?php endwhile; ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
 </div>
+
 <style>
-	.manage-students-btn {
-    display: inline-block; /* To ensure it behaves like a button */
-    padding: 8px 12px; /* Padding for better clickable area */
-    background-color: #007bff; /* Bootstrap primary color */
-    color: white; /* Text color */
-    border: none; /* Remove default border */
-    border-radius: 4px; /* Rounded corners */
-    text-decoration: none; /* Remove underline from link */
-    font-size: 14px; /* Font size */
-    transition: background-color 0.3s, transform 0.2s;
+/* Modern table styling */
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    border-bottom-width: 0;
+    border: none;
+    color: #333;
+    font-weight: 500; /* Add slight boldness */
 }
 
-.manage-students-btn:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-    transform: translateY(-2px); /* Lift effect on hover */
+/* Styled table */
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
 }
 
-.manage-students-btn:active {
-    background-color: #004494; /* Even darker shade on click */
-    transform: translateY(0); /* Reset lift effect */
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
 }
-.btn-group, .btn-group-vertical {
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+/* Red table header */
+.card-primary.card-outline {
+    border-top: none;
+}
+
+thead th {
+    background-color: #dc143c;
+    color: #f3f3f3;
+    font-weight: bold;
+}
+
+/* Card header styling */
+.card-header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: .75rem 1.25rem;
     position: relative;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    vertical-align: middle;
-    gap: 20px;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+/* Button styles */
+.btn-primary {
+    color: blue;
+    background-color: transparent;
+    border: none;
+}
+
+.btn-danger {
+    color: red;
+	background-color: transparent;
+    border: none;
+}
+/* Hover effect for rows */
+tbody tr:hover {
+    background-color: #f1f1f1;
 }
 
 </style>
+
+
 <script>
 	$(document).ready(function(){
 		$('#list').dataTable()

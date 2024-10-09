@@ -67,7 +67,10 @@
 							<?php endif; ?>
 						</div>
 					</div>
-				</div>
+					<button type="button" id="actionButton" class="btn-flat" data-toggle="dropdown" aria-expanded="true">
+    Next>>
+</button>
+
 			</div>
 		</div>
 	</div>
@@ -76,84 +79,100 @@
 	.dropright a:hover{
 		color:black !important;
 	}
+	.card-primary.card-outline {
+    border-top: none;
+}
+.btn-flat {
+    border-radius: 0;
+    border-width: 1px;
+    box-shadow: none;
+	margin-left: 90% ;
+}
 </style>
 <script>
-	$(document).ready(function(){
-		$('#ui-sortable-list').sortable()
-		$('.edit_criteria').click(function(){
-				var id = $(this).attr('data-id')
-				var criteria = <?php echo json_encode($criteria) ?>;
-				$('#manage-criteria').find("[name='id']").val(criteria[id].id)
-				$('#manage-criteria').find("[name='criteria']").val(criteria[id].criteria)
+	
+    $(document).ready(function() {
+        $('#ui-sortable-list').sortable();
 
-		})
-		$('#manage-criteria').on('reset',function(){
-			$(this).find('input:hidden').val('')
-		})
-		$('.delete_criteria').click(function(){
-		_conf("Are you sure to delete this criteria?","delete_criteria",[$(this).attr('data-id')])
-		})
-		$('.make_default').click(function(){
-		_conf("Are you sure to make this criteria year as the system default?","make_default",[$(this).attr('data-id')])
-		})
+        // Click event for the action button
+        $('#actionButton').click(function() {
+            // Redirect to the desired page
+            window.location.href = 'index.php?page=manage_questionnaire'; // Change the URL as needed
+        });
 
-		$('#manage-criteria').submit(function(e){
-			e.preventDefault();
-			start_load()
-			$('#msg').html('')
-			$.ajax({
-				url:'ajax.php?action=save_criteria',
-				method:'POST',
-				data:$(this).serialize(),
-				success:function(resp){
-					if(resp == 1){
-						alert_toast("Data successfully saved.","success");
-						setTimeout(function(){
-							location.reload()	
-						},1750)
-					}else if(resp == 2){
-						$('#msg').html('<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Criteria already exist.</div>')
-						end_load()
-					}
-				}
-			})
-		})
-		$('#order-criteria').submit(function(e){
-			e.preventDefault();
-			start_load()
-			$.ajax({
-				url:'ajax.php?action=save_criteria_order',
-				method:'POST',
-				data:$(this).serialize(),
-				success:function(resp){
-					if(resp == 1){
-						alert_toast("Data successfully saved.","success");
-						setTimeout(function(){
-							location.reload()	
-						},1750)
-				}
-				}
-			})
-		})
+        // Existing edit criteria functionality
+        $('.edit_criteria').click(function() {
+            var id = $(this).attr('data-id');
+            var criteria = <?php echo json_encode($criteria) ?>;
+            $('#manage-criteria').find("[name='id']").val(criteria[id].id);
+            $('#manage-criteria').find("[name='criteria']").val(criteria[id].criteria);
+        });
 
-	})
-	function delete_criteria($id){
-		start_load()
-		$.ajax({
-			url:'ajax.php?action=delete_criteria',
-			method:'POST',
-			data:{id:$id},
-			success:function(resp){
-				if(resp==1){
-					alert_toast("Data successfully deleted",'success')
-					setTimeout(function(){
-						location.reload()
-					},1500)
+        $('#manage-criteria').on('reset', function() {
+            $(this).find('input:hidden').val('');
+        });
 
-				}
-			}
-		})
-	}
+        $('.delete_criteria').click(function() {
+            _conf("Are you sure to delete this criteria?", "delete_criteria", [$(this).attr('data-id')]);
+        });
+
+        $('#manage-criteria').submit(function(e) {
+            e.preventDefault();
+            start_load();
+            $('#msg').html('');
+            $.ajax({
+                url: 'ajax.php?action=save_criteria',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(resp) {
+                    if (resp == 1) {
+                        alert_toast("Data successfully saved.", "success");
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1750);
+                    } else if (resp == 2) {
+                        $('#msg').html('<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Criteria already exist.</div>');
+                        end_load();
+                    }
+                }
+            });
+        });
+
+        $('#order-criteria').submit(function(e) {
+            e.preventDefault();
+            start_load();
+            $.ajax({
+                url: 'ajax.php?action=save_criteria_order',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(resp) {
+                    if (resp == 1) {
+                        alert_toast("Data successfully saved.", "success");
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1750);
+                    }
+                }
+            });
+        });
+    });
+
+    function delete_criteria($id) {
+        start_load();
+        $.ajax({
+            url: 'ajax.php?action=delete_criteria',
+            method: 'POST',
+            data: { id: $id },
+            success: function(resp) {
+                if (resp == 1) {
+                    alert_toast("Data successfully deleted", 'success');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1500);
+                }
+            }
+        });
+    }
 	function make_default($id){
 		start_load()
 		$.ajax({
