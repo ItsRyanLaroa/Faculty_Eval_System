@@ -1,178 +1,335 @@
-<?php include'db_connect.php' ?>
-<div class="col-lg-12">
-	<div class="card card-outline card-primary">
-		<div class="card-header">
-		</div>
-		<div class="card-body">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="card card-outline card-info">
-							<div class="card-header"><b>Criteria Form</b></div>
-							<div class="card-body">
-								<form action="" id="manage-criteria">
-									<input type="hidden" name="id">
-									<div class="form-group">
-										<label for="">Criteria</label>
-										<input type="text" name="criteria" class="form-control form-control-sm">
-									</div>
-								</form>
-							</div>
-							<div class="card-footer">
-								<div class="d-flex justify-content-end w-100">
-									<button class="btn btn-sm btn-primary btn-flat bg-gradient-primary mx-1" form="manage-criteria">Save</button>
-									<button class="btn btn-sm btn-flat btn-secondary bg-gradient-secondary mx-1" form="manage-criteria" type="reset">Cancel</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-8">
-						<div class="callout callout-info">
-							<?php 
-								$qry = $conn->query("SELECT * FROM criteria_list order by abs(order_by) asc ");
-								if($qry->num_rows > 0):
-							?>
-							<div class="d-flex justify-content-between w-100">
-								<label for=""><b>Criteria List</b></label>
-									<button class="btn btn-sm btn-primary btn-flat bg-gradient-primary mx-1" form="order-criteria">Save Order</button>
-							</div>
-							<hr>
-							<form action="" id="order-criteria">
-							<ul class="list-group btn col-md-8" id="ui-sortable-list">
-								<?php
-								$criteria = array();
-								while($row= $qry->fetch_assoc()):
-									$criteria[$row['id']] = $row; 
-								?>
-								<li class="list-group-item text-left">
-									<span class="btn-group dropright float-right">
-									  <span type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									   <i class="fa fa-ellipsis-v"></i>
-									  </span>
-									  <div class="dropdown-menu">
-									     <a class="dropdown-item edit_criteria" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Edit</a>
-					                      <div class="dropdown-divider"></div>
-					                     <a class="dropdown-item delete_criteria" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete  </a>
-									  </div>
-									</span>
-									<i class="fa fa-bars"></i> <?php echo ucwords($row['criteria']) ?>
-									<input type="hidden" name="criteria_id[]" value="<?php echo $row['id'] ?>">
-								</li>
-								<?php endwhile; ?>
-							</form>
-							</ul>
-							</form>
-							<?php else: ?>
-								<center>There's no criteria in the database yet</center>
-							<?php endif; ?>
-						</div>
-					</div>
-					<button type="button" id="actionButton" class="btn-flat" data-toggle="dropdown" aria-expanded="true">
-    Next>>
-</button>
-
-			</div>
-		</div>
-	</div>
-</div>
-<style>
-	.dropright a:hover{
-		color:black !important;
+<?php 
+include 'db_connect.php';
+if(isset($_GET['id'])){
+	$qry = $conn->query("SELECT * FROM academic_list where id = ".$_GET['id'])->fetch_array();
+	foreach($qry as $k => $v){
+		$$k = $v;
 	}
-	.card-primary.card-outline {
-    border-top: none;
 }
-.btn-flat {
-    border-radius: 0;
-    border-width: 1px;
-    box-shadow: none;
-	margin-left: 90% ;
-}
-</style>
-<script>
-	
-    $(document).ready(function() {
-        $('#ui-sortable-list').sortable();
-
-        // Click event for the action button
-        $('#actionButton').click(function() {
-            // Redirect to the desired page
-            window.location.href = 'index.php?page=manage_questionnaire'; // Change the URL as needed
-        });
-
-        // Existing edit criteria functionality
-        $('.edit_criteria').click(function() {
-            var id = $(this).attr('data-id');
-            var criteria = <?php echo json_encode($criteria) ?>;
-            $('#manage-criteria').find("[name='id']").val(criteria[id].id);
-            $('#manage-criteria').find("[name='criteria']").val(criteria[id].criteria);
-        });
-
-        $('#manage-criteria').on('reset', function() {
-            $(this).find('input:hidden').val('');
-        });
-
-        $('.delete_criteria').click(function() {
-            _conf("Are you sure to delete this criteria?", "delete_criteria", [$(this).attr('data-id')]);
-        });
-
-        $('#manage-criteria').submit(function(e) {
-            e.preventDefault();
-            start_load();
-            $('#msg').html('');
-            $.ajax({
-                url: 'ajax.php?action=save_criteria',
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(resp) {
-                    if (resp == 1) {
-                        alert_toast("Data successfully saved.", "success");
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1750);
-                    } else if (resp == 2) {
-                        $('#msg').html('<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Criteria already exist.</div>');
-                        end_load();
-                    }
-                }
-            });
-        });
-
-        $('#order-criteria').submit(function(e) {
-            e.preventDefault();
-            start_load();
-            $.ajax({
-                url: 'ajax.php?action=save_criteria_order',
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function(resp) {
-                    if (resp == 1) {
-                        alert_toast("Data successfully saved.", "success");
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1750);
-                    }
-                }
-            });
-        });
-    });
-
-    function delete_criteria($id) {
-        start_load();
-        $.ajax({
-            url: 'ajax.php?action=delete_criteria',
-            method: 'POST',
-            data: { id: $id },
-            success: function(resp) {
-                if (resp == 1) {
-                    alert_toast("Data successfully deleted", 'success');
-                    setTimeout(function() {
-                        location.reload();
-                    }, 1500);
-                }
-            }
-        });
+function ordinal_suffix($num){
+    $num = $num % 100; // protect against large numbers
+    if($num < 11 || $num > 13){
+         switch($num % 10){
+            case 1: return $num.'st';
+            case 2: return $num.'nd';
+            case 3: return $num.'rd';
+        }
     }
+    return $num.'th';
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semester Page</title>
+    <link rel="stylesheet" href="Css/category.css">
+    <style>
+        .btn-primary {
+            color: blue;
+            background-color: transparent;
+            border: none;
+        }
+
+        .btn-danger {
+            color: red;
+            background-color: transparent;
+            border: none;
+        }
+
+        .buttonContainer {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .buttonContainer button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .tabPanel {
+            display: none;
+        }
+
+        .tabPanel.active {
+            display: block;
+        }
+
+        .nextButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        select {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .dropright a:hover {
+            color: black !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="buttonContainer">
+            <button id="semesterButton" class="active" data-completed="false">Semester</button>
+            <button id="categoryButton" data-completed="false">Category</button>
+            <button id="questionnaireButton" data-completed="false">Questionnaire</button>
+        </div>
+
+        <div class="tabPanel" id="semesterPanel">
+            <h2>Select Semester</h2>
+            <div class="center">
+                <select id="semesterDropdown">
+                    <option value="">Select a Semester</option>
+                    <?php
+                    $qry = $conn->query("SELECT * FROM academic_list ORDER BY abs(year) DESC, abs(semester) DESC");
+                    while ($row = $qry->fetch_assoc()):
+                    ?>
+                        <option value="<?php echo $row['id']; ?>">
+                            <?php echo $row['year'] . " - Semester " . $row['semester']; ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+                <button id="nextToCategory" class="nextButton" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Category Panel with Criteria List and Form -->
+        <div class="tabPanel" id="categoryPanel">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-outline card-info">
+                        <div class="card-header"><b>Criteria Form</b></div>
+                        <div class="card-body">
+                            <form action="" id="manage-criteria">
+                                <input type="hidden" name="id">
+                                <div class="form-group">
+                                    <label for="">Criteria</label>
+                                    <input type="text" name="criteria" class="form-control form-control-sm">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-end w-100">
+                                <button class="btn btn-sm btn-primary btn-flat bg-gradient-primary mx-1" form="manage-criteria">Save</button>
+                                <button class="btn btn-sm btn-flat btn-secondary bg-gradient-secondary mx-1" form="manage-criteria" type="reset">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="callout callout-info">
+                        <?php 
+                        $qry = $conn->query("SELECT * FROM criteria_list ORDER BY abs(order_by) ASC");
+                        if($qry->num_rows > 0):
+                        ?>
+                        <div class="d-flex justify-content-between w-100">
+                            <label for=""><b>Criteria List</b></label>
+                            <button class="btn btn-sm btn-primary btn-flat bg-gradient-primary mx-1" form="order-criteria">Save Order</button>
+                        </div>
+                        <hr>
+                        <form action="" id="order-criteria">
+                            <ul class="list-group btn col-md-8" id="ui-sortable-list">
+                                <?php
+                                $criteria = array();
+                                while($row = $qry->fetch_assoc()):
+                                    $criteria[$row['id']] = $row; 
+                                ?>
+                                <li class="list-group-item text-left">
+                                    <span class="btn-group dropright float-right">
+                                      <span type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <i class="fa fa-ellipsis-v"></i>
+                                      </span>
+                                      <div class="dropdown-menu">
+                                         <a class="dropdown-item edit_criteria" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Edit</a>
+                                         <div class="dropdown-divider"></div>
+                                         <a class="dropdown-item delete_criteria" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>
+                                      </div>
+                                    </span>
+                                    <i class="fa fa-bars"></i> <?php echo ucwords($row['criteria']) ?>
+                                    <input type="hidden" name="criteria_id[]" value="<?php echo $row['id'] ?>">
+                                </li>
+                                <?php endwhile; ?>
+                            </ul>
+                        </form>
+                        <?php else: ?>
+                        <center>There's no criteria in the database yet</center>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <button id="nextToQuestionnaire" class="nextButton">Next</button>
+        </div>
+
+        <div class="tabPanel" id="questionnairePanel">
+            <h2>Questionnaire Content</h2>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const semesterButton = document.getElementById("semesterButton");
+            const categoryButton = document.getElementById("categoryButton");
+            const questionnaireButton = document.getElementById("questionnaireButton");
+
+            const semesterPanel = document.getElementById("semesterPanel");
+            const categoryPanel = document.getElementById("categoryPanel");
+            const questionnairePanel = document.getElementById("questionnairePanel");
+
+            const nextToCategoryButton = document.getElementById("nextToCategory");
+            const nextToQuestionnaireButton = document.getElementById("nextToQuestionnaire");
+
+            const semesterDropdown = document.getElementById("semesterDropdown");
+
+            const hideAllPanels = () => {
+                semesterPanel.style.display = "none";
+                categoryPanel.style.display = "none";
+                questionnairePanel.style.display = "none";
+            };
+
+            semesterButton.addEventListener("click", () => {
+                hideAllPanels();
+                semesterPanel.style.display = "block";
+                semesterButton.classList.add("active");
+                categoryButton.classList.remove("active");
+                questionnaireButton.classList.remove("active");
+            });
+
+            categoryButton.addEventListener("click", () => {
+                hideAllPanels();
+                categoryPanel.style.display = "block";
+                categoryButton.classList.add("active");
+                semesterButton.classList.remove("active");
+                questionnaireButton.classList.remove("active");
+            });
+
+            questionnaireButton.addEventListener("click", () => {
+                hideAllPanels();
+                questionnairePanel.style.display = "block";
+                questionnaireButton.classList.add("active");
+                semesterButton.classList.remove("active");
+                categoryButton.classList.remove("active");
+            });
+
+            nextToCategoryButton.addEventListener("click", () => {
+                hideAllPanels();
+                categoryPanel.style.display = "block";
+                categoryButton.classList.add("active");
+                semesterButton.classList.remove("active");
+                questionnaireButton.classList.remove("active");
+            });
+
+            nextToQuestionnaireButton.addEventListener("click", () => {
+                hideAllPanels();
+                questionnairePanel.style.display = "block";
+                questionnaireButton.classList.add("active");
+                semesterButton.classList.remove("active");
+                categoryButton.classList.remove("active");
+            });
+
+            semesterDropdown.addEventListener("change", () => {
+                if (semesterDropdown.value !== "") {
+                    nextToCategoryButton.disabled = false;
+                } else {
+                    nextToCategoryButton.disabled = true;
+                }
+            });
+
+            hideAllPanels();
+            semesterPanel.style.display = "block";
+        });
+        $(document).ready(function(){
+		$('#ui-sortable-list').sortable()
+		$('.edit_criteria').click(function(){
+				var id = $(this).attr('data-id')
+				var criteria = <?php echo json_encode($criteria) ?>;
+				$('#manage-criteria').find("[name='id']").val(criteria[id].id)
+				$('#manage-criteria').find("[name='criteria']").val(criteria[id].criteria)
+
+		})
+		$('#manage-criteria').on('reset',function(){
+			$(this).find('input:hidden').val('')
+		})
+		$('.delete_criteria').click(function(){
+		_conf("Are you sure to delete this criteria?","delete_criteria",[$(this).attr('data-id')])
+		})
+		$('.make_default').click(function(){
+		_conf("Are you sure to make this criteria year as the system default?","make_default",[$(this).attr('data-id')])
+		})
+
+		$('#manage-criteria').submit(function(e){
+			e.preventDefault();
+			start_load()
+			$('#msg').html('')
+			$.ajax({
+				url:'ajax.php?action=save_criteria',
+				method:'POST',
+				data:$(this).serialize(),
+				success:function(resp){
+					if(resp == 1){
+						alert_toast("Data successfully saved.","success");
+						setTimeout(function(){
+							location.reload()	
+						},1750)
+					}else if(resp == 2){
+						$('#msg').html('<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Criteria already exist.</div>')
+						end_load()
+					}
+				}
+			})
+		})
+		$('#order-criteria').submit(function(e){
+			e.preventDefault();
+			start_load()
+			$.ajax({
+				url:'ajax.php?action=save_criteria_order',
+				method:'POST',
+				data:$(this).serialize(),
+				success:function(resp){
+					if(resp == 1){
+						alert_toast("Data successfully saved.","success");
+						setTimeout(function(){
+							location.reload()	
+						},1750)
+				}
+				}
+			})
+		})
+
+	})
+	function delete_criteria($id){
+		start_load()
+		$.ajax({
+			url:'ajax.php?action=delete_criteria',
+			method:'POST',
+			data:{id:$id},
+			success:function(resp){
+				if(resp==1){
+					alert_toast("Data successfully deleted",'success')
+					setTimeout(function(){
+						location.reload()
+					},1500)
+
+				}
+			}
+		})
+	}
 	function make_default($id){
 		start_load()
 		$.ajax({
@@ -189,4 +346,6 @@
 			}
 		})
 	}
-</script>
+    </script>
+</body>
+</html>

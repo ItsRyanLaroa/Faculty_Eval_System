@@ -20,6 +20,13 @@
     .sidebar {
       padding: 45px 8px;
     }
+    .layout-navbar-fixed.layout-fixed .wrapper .sidebar {
+    margin-top: calc(9.5rem + 1px);
+}
+    .brand{
+      width: 150px;
+      margin-left: 30px;
+    }
   </style>
   <link rel="stylesheet" href="path/to/font-awesome/css/all.min.css">
   <script src="path/to/jquery.min.js"></script>
@@ -28,8 +35,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <div class="dropdown">
       <a href="./" class="brand-link">
-        <h3 class="text-center p-0 m-0"><b style="color: yellow;">SCC-EVALUATION</b></h3>
-        <h3 class="text-center p-0 m-0"><b style="color: yellow;">SYSTEM</b></h3>
+      <img src="images/file.png"  class="brand">
       </a>
     </div>
     <div class="sidebar">
