@@ -110,7 +110,7 @@ function ordinal_suffix($num){
 
         <!-- Category Panel with Criteria List and Form -->
         <div class="tabPanel" id="categoryPanel">
-
+            <h2>Category & Criteria</h2>
             <div class="row">
                 <div class="col-md-4">
                     <div class="card card-outline card-info">
