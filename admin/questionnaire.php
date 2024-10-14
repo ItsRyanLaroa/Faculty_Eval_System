@@ -1,4 +1,33 @@
 	<?php include'db_connect.php' ?>
+	<style>
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f4f4f4;
+            padding: 10px 0;
+        }
+
+        .nav-bar a {
+            text-decoration: none;
+            padding: 10px 15px;
+            color: #333;
+        }
+
+        .nav-bar a.active {
+            font-weight: bold;
+            border-bottom: 2px solid blue;
+        }
+
+        .content-container {
+            margin-top: 20px;
+            padding: 20px;
+        }
+    </style>
+<div class="nav-bar">
+        <a href="./index.php?page=semester" class="nav-link nav-semester <?php echo (isset($_GET['page']) && $_GET['page'] == 'semester') ? 'active' : ''; ?>">Semester</a>
+        <a href="./index.php?page=category" class="nav-link nav-category <?php echo (isset($_GET['page']) && $_GET['page'] == 'category') ? 'active' : ''; ?>">Category</a>
+        <a href="./index.php?page=questionnaire" class="nav-link nav-questionnaire <?php echo (isset($_GET['page']) && $_GET['page'] == 'questionnaire') ? 'active' : ''; ?>">Questionnaire</a>
+    </div>
 	<div class="col-lg-12">
 		<div class="card card-outline card-primary">
 			<div class="card-header">

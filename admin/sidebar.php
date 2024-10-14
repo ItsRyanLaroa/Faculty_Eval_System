@@ -65,14 +65,14 @@
               <p>Academic Year</p>
             </a>
           </li> 
-          <li class="nav-item dropdown">
+          <!-- <li class="nav-item dropdown">
             <a href="./index.php?page=questionnaire" class="nav-link nav-questionnaire">
               <i class="nav-icon fas fa-question-circle"></i>
               <p>Questionnaires</p>
             </a>
-          </li>
+          </li> -->
           <li class="nav-item dropdown">
-            <a href="./index.php?page=criteria_list" class="nav-link nav-criteria_list">
+            <a href="./index.php?page=semester" class="nav-link nav-criteria_list">
               <i class="nav-icon fas fa-tasks"></i>
               <p>Category</p>
             </a>
