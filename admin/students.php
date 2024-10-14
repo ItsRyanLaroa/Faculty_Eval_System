@@ -30,8 +30,13 @@ if(isset($_GET['id'])){
 <div class="col-lg-12">
     <div class="card card-outline card-success">
         <div class="card-header">
-           
-            <div class="class-details">
+            <!-- Back Button -->
+            <a href="index.php?page=class_list" class="btn-back">
+                <i class="fa fa-arrow-left"></i> Back
+            </a>
+    
+            
+            <div class="class-details mt-3">
                 <span class="class-name">Class: <?php echo $class_name; ?></span>
                 <span class="class-code">Class Code: <?php echo $class_code; ?></span>
             </div>
@@ -39,10 +44,9 @@ if(isset($_GET['id'])){
                 <span class="teacher-name">Teacher: <?php echo $teacher_name; ?></span>
                 <span class="subject-name"> | Subject: <?php echo $subject_name; ?></span>
             </div>
-          
         </div>
         <div class="card-body">
-            <table class="table tabe-hover table-bordered" id="list">
+            <table class="table table-hover table-bordered" id="list">
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
@@ -61,7 +65,7 @@ if(isset($_GET['id'])){
                                          INNER JOIN class_list e ON s.class_id = e.id 
                                          WHERE e.id = $id 
                                          ORDER BY concat(s.firstname,' ',s.lastname) ASC");
-                    while($row= $qry->fetch_assoc()):
+                    while($row = $qry->fetch_assoc()):
                     ?>
                     <tr>
                         <th class="text-center"><?php echo $i++ ?></th>
@@ -72,7 +76,7 @@ if(isset($_GET['id'])){
                             <button type="button" class="btn btn-default btn-sm btn-flat border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 Action
                             </button>
-                            <div class="dropdown-menu" style="">
+                            <div class="dropdown-menu">
                                 <a class="dropdown-item view_student" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">View</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="./index.php?page=edit_student&id=<?php echo $row['id'] ?>">Edit</a>
@@ -89,23 +93,78 @@ if(isset($_GET['id'])){
 </div>
 
 <style>
+     .btn-back {
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 25px;
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        margin-bottom: 15px;
+    }
+
+    .btn-back i {
+        margin-right: 8px;
+    }
+
+    .btn-back:hover {
+        background-color: #dc143c;
+        color: black;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .class-details, .teacher-details {
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .class-name, .teacher-name {
+        font-weight: bold;
+    }
+
+    .subject-name {
+        color: #666;
+    }
+
+    .card-success.card-outline {
+        border-top: none;
+    }
+
+    .table-bordered {
+        border: none;
+    }
+
+    thead th {
+        background-color: #dc143c; 
+        color: white;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    tbody tr:hover {
+        background-color: #f1f1f1;
+    }
     .class-details {
         display: flex;
-        align-items: center;  /* Aligns the items vertically */
-        font-size: 18px;      /* Set a standard font size */
+        align-items: center;
+        font-size: 18px;
     }
 
     .class-name {
         font-weight: bold;
-        margin-right: 15px;  /* Add space between the class name and class code */
+        margin-right: 15px;
     }
 
     .class-code {
-        color: #555;  /* Make the class code a lighter shade */
+        color: #555;
     }
 
     .teacher-details {
-        margin-top: 10px;  /* Add some space between class details and teacher name */
+        margin-top: 10px;
         font-size: 16px;
     }
 
@@ -118,90 +177,75 @@ if(isset($_GET['id'])){
         font-size: 16px;
         color: #666;
     }
+
     .card-success.card-outline {
-    border-top: none;
-}
-table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
-    border-bottom-width: 0;
-    border: none;
-    color: #333; 
-    font-weight: 500; /* Add slight boldness */
-}
+        border-top: none;
+    }
 
-/* Table styling */
-table.table-bordered.dataTable {
-    border-right-width: 0;
-    border: none;
-}
-	/* Red table header */
-	.card-primary.card-outline {
-    border-top: none;
-}
+    table.table-bordered.dataTable tbody th, 
+    table.table-bordered.dataTable tbody td {
+        border: none;
+        color: #333; 
+        font-weight: 500;
+    }
 
+    table.table-bordered.dataTable {
+        border: none;
+    }
 
-/* Red table header */
-thead th {
-    background-color: #dc143c ; 
-    color: white; /* White text for contrast */
-    text-align: center;
-    font-weight: bold;
-	
-}
+    thead th {
+        background-color: #dc143c;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+    }
 
-/* Card header styling */
-.card-header {
-    background-color: transparent;
-    border-bottom: none;
-    padding: .75rem 1.25rem;
-    position: relative;
-    border-top-left-radius: .25rem;
-    border-top-right-radius: .25rem;
-}
+    .card-header {
+        background-color: transparent;
+        border-bottom: none;
+    }
 
-/* Button styles */
-.btn-primary {
-    color: blue;
-    background-color: white;
-    border: none;
-}
+    .btn-primary {
+        color: blue;
+        background-color: white;
+        border: none;
+    }
 
+    .btn-danger {
+        color: red;
+        background-color: white;
+        border: none;
+    }
 
-.btn-danger {
-    color: red;
-    background-color: white;
-    border: none;
-}
-
-/* Hover effect for rows */
-tbody tr:hover {
-    background-color: #f1f1f1; /* Light gray hover */
-}
+    tbody tr:hover {
+        background-color: #f1f1f1;
+    }
 </style>
 
 <script>
     $(document).ready(function(){
-        $('#list').dataTable()
+        $('#list').dataTable();
         $('.view_student').click(function(){
-            uni_modal("<i class='fa fa-id-card'></i> Student Details", "<?php echo $_SESSION['login_view_folder'] ?>view_student.php?id=" + $(this).attr('data-id'))
-        })
+            uni_modal("<i class='fa fa-id-card'></i> Student Details", "<?php echo $_SESSION['login_view_folder'] ?>view_student.php?id=" + $(this).attr('data-id'));
+        });
         $('.delete_student').click(function(){
-            _conf("Are you sure to delete this student?", "delete_student", [$(this).attr('data-id')])
-        })
-    }) 
+            _conf("Are you sure to delete this student?", "delete_student", [$(this).attr('data-id')]);
+        });
+    }); 
     function delete_student($id){
-        start_load()
+        start_load();
         $.ajax({
             url: 'ajax.php?action=delete_student',
             method: 'POST',
             data: {id: $id},
             success: function(resp){
                 if(resp == 1){
-                    alert_toast("Data successfully deleted", 'success')
+                    alert_toast("Data successfully deleted", 'success');
                     setTimeout(function(){
-                        location.reload()
-                    }, 1500)
+                        location.reload();
+                    }, 1500);
                 }
             }
-        })
+        });
     }
 </script>

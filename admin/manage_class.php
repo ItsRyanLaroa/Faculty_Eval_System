@@ -2,10 +2,10 @@
 include '../db_connect.php';
 
 if(isset($_GET['id'])){
-	$qry = $conn->query("SELECT * FROM class_list WHERE id={$_GET['id']}")->fetch_array();
-	foreach($qry as $k => $v){
-		$$k = $v;
-	}
+    $qry = $conn->query("SELECT * FROM class_list WHERE id={$_GET['id']}")->fetch_array();
+    foreach($qry as $k => $v){
+        $$k = $v;
+    }
 }
 
 // Generate a random class code if not already set
@@ -16,16 +16,27 @@ $code = isset($code) ? $code : substr(str_shuffle("0123456789abcdefghijklmnopqrs
         <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
         <div id="msg" class="form-group"></div>
 
-        <!-- Curriculum input -->
+        <!-- Department dropdown -->
         <div class="form-group">
             <label for="curriculum" class="control-label">Department</label>
-            <input type="text" class="form-control form-control-sm" name="curriculum" id="curriculum" value="<?php echo isset($curriculum) ? $curriculum : '' ?>" required>
+            <select name="curriculum" id="curriculum" class="custom-select custom-select-sm" required>
+                <option value="BSIT" <?php echo isset($curriculum) && $curriculum == 'BSIT' ? 'selected' : '' ?>>BSIT</option>
+                <option value="BSBA" <?php echo isset($curriculum) && $curriculum == 'BSBA' ? 'selected' : '' ?>>BSBA</option>
+                <option value="BSCRIM" <?php echo isset($curriculum) && $curriculum == 'BSCRIM' ? 'selected' : '' ?>>BSCRIM</option>
+                <option value="BSHM" <?php echo isset($curriculum) && $curriculum == 'BSHM' ? 'selected' : '' ?>>BSHM</option>
+                <option value="BEED" <?php echo isset($curriculum) && $curriculum == 'BEED' ? 'selected' : '' ?>>BEED</option>
+            </select>
         </div>
 
-        <!-- Year Level input -->
+        <!-- Year Level dropdown -->
         <div class="form-group">
             <label for="level" class="control-label">Year Level</label>
-            <input type="text" class="form-control form-control-sm" name="level" id="level" value="<?php echo isset($level) ? $level : '' ?>" required>
+            <select name="level" id="level" class="custom-select custom-select-sm" required>
+                <option value="1" <?php echo isset($level) && $level == '1' ? 'selected' : '' ?>>1st Year</option>
+                <option value="2" <?php echo isset($level) && $level == '2' ? 'selected' : '' ?>>2nd Year</option>
+                <option value="3" <?php echo isset($level) && $level == '3' ? 'selected' : '' ?>>3rd Year</option>
+                <option value="4" <?php echo isset($level) && $level == '4' ? 'selected' : '' ?>>4th Year</option>
+            </select>
         </div>
 
         <!-- Section input -->
@@ -62,30 +73,29 @@ $code = isset($code) ? $code : substr(str_shuffle("0123456789abcdefghijklmnopqrs
     </form>
 </div>
 
-
 <script>
-	$(document).ready(function(){
-		$('#manage-class').submit(function(e){
-			e.preventDefault();
-			start_load();
-			$('#msg').html('');
+    $(document).ready(function(){
+        $('#manage-class').submit(function(e){
+            e.preventDefault();
+            start_load();
+            $('#msg').html('');
 
-			$.ajax({
-				url: 'ajax.php?action=save_class',
-				method: 'POST',
-				data: $(this).serialize(),
-				success: function(resp){
-					if(resp == 1){
-						alert_toast("Data successfully saved.", "success");
-						setTimeout(function(){
-							location.reload();
-						}, 1750);
-					} else if(resp == 2){
-						$('#msg').html('<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Class already exists.</div>');
-						end_load();
-					}
-				}
-			});
-		});
-	});
+            $.ajax({
+                url: 'ajax.php?action=save_class',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(resp){
+                    if(resp == 1){
+                        alert_toast("Data successfully saved.", "success");
+                        setTimeout(function(){
+                            location.reload();
+                        }, 1750);
+                    } else if(resp == 2){
+                        $('#msg').html('<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Class already exists.</div>');
+                        end_load();
+                    }
+                }
+            });
+        });
+    });
 </script>

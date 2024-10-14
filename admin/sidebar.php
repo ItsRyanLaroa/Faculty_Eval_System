@@ -74,7 +74,7 @@
           <li class="nav-item dropdown">
             <a href="./index.php?page=semester" class="nav-link nav-criteria_list">
               <i class="nav-icon fas fa-tasks"></i>
-              <p>Category</p>
+              <p>Category&Questionnaire</p>
             </a>
           </li> 
           <!-- <li class="nav-item dropdown">
