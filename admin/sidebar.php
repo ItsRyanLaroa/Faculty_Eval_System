@@ -20,13 +20,34 @@
     .sidebar {
       padding: 45px 8px;
     }
+
+    .sidebar-collapse .brand {
+      width: 25px;
+      height: auto;
+    }
     .layout-navbar-fixed.layout-fixed .wrapper .sidebar {
     margin-top: calc(9.5rem + 1px);
-}
-    .brand{
-      width: 150px;
-      margin-left: 30px;
     }
+
+    .layout-navbar-fixed.layout-fixed .wrapper .sidebar-collapse .brand {
+    width: 25px;
+    height: auto;
+    }
+    
+    .brand-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      width: 100px;
+      height: auto;
+    }
+
+
+    
   </style>
   <link rel="stylesheet" href="path/to/font-awesome/css/all.min.css">
   <script src="path/to/jquery.min.js"></script>
@@ -35,6 +56,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <div class="dropdown">
       <a href="./" class="brand-link">
+      <img src="images/feslogo.png" class="brand">
       <img src="images/file.png"  class="brand">
       </a>
     </div>
@@ -209,6 +231,36 @@
         }
       }
     });
+
+    $(document).ready(function(){
+  var page = '<?php echo isset($_GET['page']) ? $_GET['page'] : 'home' ?>';
+  var s = '<?php echo isset($_GET['s']) ? $_GET['s'] : '' ?>';
+  
+  if(s != '') page += '_' + s;
+
+  
+  if($('.nav-link.nav-' + page).length > 0){
+    $('.nav-link.nav-' + page).addClass('active');
+    if($('.nav-link.nav-' + page).hasClass('tree-item')){
+      $('.nav-link.nav-' + page).closest('.nav-treeview').siblings('a').addClass('active');
+      $('.nav-link.nav-' + page).closest('.nav-treeview').parent().addClass('menu-open');
+    }
+    if($('.nav-link.nav-' + page).hasClass('nav-is-tree')){
+      $('.nav-link.nav-' + page).parent().addClass('menu-open');
+    }
+  }
+
+  
+  $('.main-sidebar').on('collapse', function() {
+    $(this).toggleClass('sidebar-collapse');
+  });
+
+  $('.main-sidebar').on('expand', function() {
+    $(this).removeClass('sidebar-collapse');
+  });
+});
+
+
   </script>
 </body>
 </html>

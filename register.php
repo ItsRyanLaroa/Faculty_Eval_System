@@ -9,6 +9,7 @@ if ($conn->connect_error) {
 
 // Initialize error message variables
 $id_error = $email_error = $password_error = $confirm_password_error = $avatar_error = "";
+$firstname = $lastname = $identifier = $email = "";
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,7 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = htmlspecialchars(trim($_POST['password']));
     $confirm_password = htmlspecialchars(trim($_POST['confirm_password']));
 
-    // Validate input fields (e.g., email format, password length)
+    // Validate input fields
+    if (empty($identifier)) {
+        $id_error = "School ID is required.";
+    }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $email_error = "Invalid email format.";
     }
@@ -37,14 +41,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
-    
-    $avatarName = 'avatar_' . uniqid() . '.' . pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
-    $avatarPath = $uploadDir . $avatarName;
 
-    if (move_uploaded_file($_FILES['avatar']['tmp_name'], $avatarPath)) {
-        // File successfully uploaded
+    if ($_FILES['avatar']['error'] == UPLOAD_ERR_OK) {
+        $avatarName = 'avatar_' . uniqid() . '.' . pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
+        $avatarPath = $uploadDir . $avatarName;
+
+        if (!move_uploaded_file($_FILES['avatar']['tmp_name'], $avatarPath)) {
+            $avatar_error = 'Failed to upload the avatar. Please try again.';
+        }
     } else {
-        $avatar_error = 'Failed to upload the avatar. Please try again.';
+        $avatar_error = 'Avatar upload error.';
     }
 
     // If there are no errors, proceed with inserting the data into the database
@@ -85,6 +91,7 @@ $conn->close();
     <link rel="stylesheet" href="Css/reg.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <style>
+        /* Styles go here */
         .invalid-input {
             border: 1px solid red;
         }
@@ -120,32 +127,13 @@ $conn->close();
         }
         .regContainer {
             display: flex;
-            width: 820px;
+            width: 750px;
             padding: 25px 30px;
             margin: auto;
             color: black;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 750px;
-        }
-        .form .button input {
-            height: 100%;
-            width: 100%;
-            font-weight: 500;
-            color: #fff;
-            background-color: #b31b1b;
-        }
-        .form .button input:hover {
-            background-color: #ff4242;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-            background-color: transparent;
-        }
-        a:hover {
-            color: black;
         }
         .input-field {
             margin-bottom: 20px;

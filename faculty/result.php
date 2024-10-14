@@ -13,14 +13,7 @@ function ordinal_suffix($num){
     return $num.'th';
 }
 ?>
-<style>
-	.list-group-item.active {
-    z-index: 2;
-    color: #fff;
-    background-color: #b31b1b;
-   
-}
-</style>
+
 <div class="col-lg-12">
 	<div class="row">
 		<div class="col-md-12 mb-1">

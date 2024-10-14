@@ -1,30 +1,51 @@
-  
-   <style>
+<style>
     .main-sidebar {
-      background-color: #b31b1b;
-   
+      background-color: #dc143c ;
     }
     .layout-navbar-fixed .wrapper .sidebar-dark-primary .brand-link:not([class*=navbar]) {
-      background-color: #b31b1b;
-  }
-.sidebar {
-      padding: 45px 8px;
+      background-color: #dc143c ;
     }
     .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, 
     .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
-      background-color: #000;
-      color: #fff;
+      background-color: #d3d3d3 ;
+      color: #000;
     }
+   
+    .sidebar-collapse .brand {
+      width: 25px;
+      height: auto;
+    }
+    .layout-navbar-fixed.layout-fixed .wrapper .sidebar {
+    margin-top: calc(9.5rem + 1px);
+    }
+
+    .layout-navbar-fixed.layout-fixed .wrapper .sidebar-collapse .brand {
+    width: 25px;
+    height: auto;
+    }
+    
+    .brand-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      width: 100px;
+      height: auto;
+    }
+
+
+    
   </style>
   
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <div class="dropdown">
-   	<a href="./" class="brand-link">
-     <h3 class="text-center p-0 m-0"><b style="color: yellow;">SCC-EVALUATION</b></h3>
-     <h3 class="text-center p-0 m-0"><b style="color: yellow;">SYSTEM</b></h3>
-
-    </a>
-      
+  <div class="dropdown">
+      <a href="./" class="brand-link">
+      <img src="images/feslogo.png" class="brand">
+      <img src="images/file.png"  class="brand">
+      </a>
     </div>
     <div class="sidebar ">
       <nav class="mt-2">
