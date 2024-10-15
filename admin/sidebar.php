@@ -26,14 +26,10 @@
       height: auto;
     }
     .layout-navbar-fixed.layout-fixed .wrapper .sidebar {
-    margin-top: calc(9.5rem + 1px);
+    margin-top: calc(6rem + 1px);
     }
 
-    .layout-navbar-fixed.layout-fixed .wrapper .sidebar-collapse .brand {
-    width: 25px;
-    height: auto;
-    }
-    
+   
     .brand-link {
       display: flex;
       justify-content: center;
@@ -94,7 +90,7 @@
             </a>
           </li> -->
           <li class="nav-item dropdown">
-            <a href="./index.php?page=semester" class="nav-link nav-criteria_list">
+            <a href="./index.php?page=category" class="nav-link nav-criteria_list">
               <i class="nav-icon fas fa-tasks"></i>
               <p>Category&Questionnaire</p>
             </a>

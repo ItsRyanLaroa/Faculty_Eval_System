@@ -60,9 +60,9 @@
 </style>
 
 <div class="nav-bar">
+<a href="./index.php?page=category" class="nav-link nav-category <?php echo (isset($_GET['page']) && $_GET['page'] == 'category') ? 'active' : ''; ?>">Category</a>
     <a href="./index.php?page=semester" class="nav-link nav-semester <?php echo (isset($_GET['page']) && $_GET['page'] == 'semester') ? 'active' : ''; ?>">Semester</a>
-    <a href="./index.php?page=category" class="nav-link nav-category <?php echo (isset($_GET['page']) && $_GET['page'] == 'category') ? 'active' : ''; ?>">Category</a>
-    <a href="./index.php?page=questionnaire" class="nav-link nav-questionnaire <?php echo (isset($_GET['page']) && $_GET['page'] == 'questionnaire') ? 'active' : ''; ?>">Questionnaire</a>
+    <a href="./index.php?page=manage_questionnaire" class="nav-link nav-questionnaire <?php echo (isset($_GET['page']) && $_GET['page'] == 'manage_questionnaire') ? 'active' : ''; ?>">Questionnaire</a>
 </div>
 
 <div class="col-lg-12">
@@ -152,7 +152,7 @@
 
         // Handle the click event for the "Next" button
         $("#nextToQuestionnaire").click(function() {
-            window.location.href = './index.php?page=questionnaire';
+            window.location.href = './index.php?page=manage_questionnaire';
         });
 
         // Make the criteria list sortable

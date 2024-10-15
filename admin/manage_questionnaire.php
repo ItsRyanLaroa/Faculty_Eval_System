@@ -32,9 +32,68 @@ function ordinal_suffix($num){
     color: #fff;
 }
 
+.card-header {
+    background-color: transparent;
+    border-bottom: none;
+}
+    .nav-bar {
+        display: flex;
+        justify-content: space-around;
+        background: #f4f4f4;
+        padding: 10px 0;
+        
+    }
 
+    .nav-bar a {
+        text-decoration: none;
+        padding: 10px 15px;
+        color: #333;
+      
+    }
+
+    .nav-bar a.active {
+        font-weight: bold;
+        border-bottom: 2px solid blue;
+        font-family: tahoma;
+    }
+
+    .content-container {
+        margin-top: 20px;
+        padding: 20px;
+    }
+
+    .card button {
+        padding: 10px 15px;
+        background-color: #dc143c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .card button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .card button:not(:disabled):hover {
+        background-color: darkblue;
+    }
+    .bg-gradient-primary {
+    background: #dc143c linear-gradient(180deg, #dc143c, #dc143c) repeat-x !important;
+    color: #fff;
+    
+}
+.bg-gradient-secondary {
+    background: #000000 linear-gradient(180deg, #000000, #6c757d) repeat-x !important;
+    color: #fff;
+}
 </style>
-
+<div class="nav-bar"> <a href="./index.php?page=category" class="nav-link nav-category <?php echo (isset($_GET['page']) && $_GET['page'] == 'category') ? 'active' : ''; ?>">Category</a>
+    <a href="./index.php?page=semester" class="nav-link nav-semester <?php echo (isset($_GET['page']) && $_GET['page'] == 'semester') ? 'active' : ''; ?>">Semester</a>
+    <a href="./index.php?page=manage_questionnaire" class="nav-link nav-questionnaire <?php echo (isset($_GET['page']) && $_GET['page'] == 'manage_questionnaire') ? 'active' : ''; ?>">Questionnaire</a>
+</div>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-4">
