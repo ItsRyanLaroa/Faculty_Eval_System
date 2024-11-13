@@ -184,23 +184,25 @@ function login(){
 			    $data = "";
 			    $type = array("", "users", "faculty_list", "student_list");
 			
-			    // Determine the unique field based on login type
+			    // Define unique field based on user type
 			    $uniqueField = ($_SESSION['login_type'] == 3) ? 'school_id' : 'email';
+			    $uniqueFieldValue = $_POST[$uniqueField];
 			
+			    // Prepare data for update query
 			    foreach ($_POST as $k => $v) {
 			        if (!in_array($k, array('id', 'cpass', 'table', 'password')) && !is_numeric($k)) {
 			            $data .= empty($data) ? " $k='$v' " : ", $k='$v' ";
 			        }
 			    }
 			
-			    // Check for duplicate based on unique field
-			    $check = $this->db->query("SELECT * FROM {$type[$_SESSION['login_type']]} WHERE $uniqueField ='$uniqueFieldValue' " . (!empty($id) ? "AND id != {$id} " : ''))->num_rows;
+			    // Check for duplicates while ignoring current record
+			    $check = $this->db->query("SELECT * FROM {$type[$_SESSION['login_type']]} WHERE $uniqueField = '$uniqueFieldValue' " . (!empty($id) ? "AND id != {$id} " : ''))->num_rows;
 			    if ($check > 0) {
 			        return 2;
 			        exit;
 			    }
 			
-			    // Handle image upload
+			    // Handle image upload if provided
 			    if (isset($_FILES['img']) && $_FILES['img']['tmp_name'] != '') {
 			        $fname = strtotime(date('y-m-d H:i')) . '_' . $_FILES['img']['name'];
 			        $move = move_uploaded_file($_FILES['img']['tmp_name'], 'assets/uploads/' . $fname);
@@ -212,14 +214,14 @@ function login(){
 			        $data .= " ,password=md5('$password') ";
 			    }
 			
-			    // Execute INSERT or UPDATE query
+			    // Insert or update record
 			    if (empty($id)) {
 			        $save = $this->db->query("INSERT INTO {$type[$_SESSION['login_type']]} SET $data");
 			    } else {
 			        $save = $this->db->query("UPDATE {$type[$_SESSION['login_type']]} SET $data WHERE id = $id");
 			    }
 			
-			    // Update session data on successful save
+			    // Update session data if save was successful
 			    if ($save) {
 			        foreach ($_POST as $key => $value) {
 			            if ($key != 'password' && !is_numeric($key)) {
@@ -232,6 +234,7 @@ function login(){
 			        return 1;
 			    }
 			}
+
 
 	
 	function delete_user(){
