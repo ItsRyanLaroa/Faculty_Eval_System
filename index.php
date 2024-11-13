@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php 
 session_start();
 if(!isset($_SESSION['login_id'])) {
@@ -18,6 +16,9 @@ if(!isset($_SESSION['system'])){
 
 include 'header.php';
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
 
 <style>
   .border-primary{
