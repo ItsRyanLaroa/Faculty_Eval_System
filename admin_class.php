@@ -180,66 +180,59 @@ function login(){
 	}
 
 		function update_user() {
-		extract($_POST);
-		$data = "";
-		$type = array("", "users", "faculty_list", "student_list");
-	
-		// Determine the unique field based on login type
-		$uniqueField = ($_SESSION['login_type'] == 3) ? 'school_id' : 'email';
-	
-		// Check if the school_id is being updated
-		if ($_SESSION['login_type'] == 3 && isset($school_id)) {
-			// Check if the new school_id is the same as the old one or if it doesn't exist in the database
-			$result = $this->db->query("SELECT id FROM {$type[$_SESSION['login_type']]} WHERE school_id = '$school_id' AND id != '$id'");
-			if ($result->num_rows > 0) {
-				return "School ID already exists"; // Return a message if the school_id already exists
+			    extract($_POST);
+			    $data = "";
+			    $type = array("", "users", "faculty_list", "student_list");
+			
+			    // Determine the unique field based on login type
+			    $uniqueField = ($_SESSION['login_type'] == 3) ? 'school_id' : 'email';
+			
+			    foreach ($_POST as $k => $v) {
+			        if (!in_array($k, array('id', 'cpass', 'table', 'password')) && !is_numeric($k)) {
+			            $data .= empty($data) ? " $k='$v' " : ", $k='$v' ";
+			        }
+			    }
+			
+			    // Check for duplicate based on unique field
+			    $check = $this->db->query("SELECT * FROM {$type[$_SESSION['login_type']]} WHERE $uniqueField ='$uniqueFieldValue' " . (!empty($id) ? "AND id != {$id} " : ''))->num_rows;
+			    if ($check > 0) {
+			        return 2;
+			        exit;
+			    }
+			
+			    // Handle image upload
+			    if (isset($_FILES['img']) && $_FILES['img']['tmp_name'] != '') {
+			        $fname = strtotime(date('y-m-d H:i')) . '_' . $_FILES['img']['name'];
+			        $move = move_uploaded_file($_FILES['img']['tmp_name'], 'assets/uploads/' . $fname);
+			        $data .= ", avatar = '$fname' ";
+			    }
+			
+			    // Encrypt password if provided
+			    if (!empty($password)) {
+			        $data .= " ,password=md5('$password') ";
+			    }
+			
+			    // Execute INSERT or UPDATE query
+			    if (empty($id)) {
+			        $save = $this->db->query("INSERT INTO {$type[$_SESSION['login_type']]} SET $data");
+			    } else {
+			        $save = $this->db->query("UPDATE {$type[$_SESSION['login_type']]} SET $data WHERE id = $id");
+			    }
+			
+			    // Update session data on successful save
+			    if ($save) {
+			        foreach ($_POST as $key => $value) {
+			            if ($key != 'password' && !is_numeric($key)) {
+			                $_SESSION['login_' . $key] = $value;
+			            }
+			        }
+			        if (isset($_FILES['img']) && !empty($_FILES['img']['tmp_name'])) {
+			            $_SESSION['login_avatar'] = $fname;
+			        }
+			        return 1;
+			    }
 			}
-		}
-	
-		// Loop through all the post data to prepare for update
-		foreach ($_POST as $k => $v) {
-			// Skip id, password, and other unnecessary fields
-			if (!in_array($k, array('id', 'cpass', 'table', 'password')) && !is_numeric($k)) {
-				$data .= empty($data) ? " $k='$v' " : ", $k='$v' ";
-			}
-		}
-	
-		// Handle image upload
-		if (isset($_FILES['img']) && $_FILES['img']['tmp_name'] != '') {
-			$fname = strtotime(date('y-m-d H:i')) . '_' . $_FILES['img']['name'];
-			$move = move_uploaded_file($_FILES['img']['tmp_name'], 'assets/uploads/' . $fname);
-			$data .= ", avatar = '$fname' ";
-		}
-	
-		// Encrypt password if provided
-		if (!empty($password)) {
-			$data .= " ,password=md5('$password') ";
-		}
-	
-		// Execute INSERT or UPDATE query
-		if (empty($id)) {
-			// Insert new record
-			$save = $this->db->query("INSERT INTO {$type[$_SESSION['login_type']]} SET $data");
-		} else {
-			// Update existing record
-			$save = $this->db->query("UPDATE {$type[$_SESSION['login_type']]} SET $data WHERE id = $id");
-		}
-	
-		// Update session data on successful save
-		if ($save) {
-			foreach ($_POST as $key => $value) {
-				if ($key != 'password' && !is_numeric($key)) {
-					$_SESSION['login_' . $key] = $value;
-				}
-			}
-			if (isset($_FILES['img']) && !empty($_FILES['img']['tmp_name'])) {
-				$_SESSION['login_avatar'] = $fname;
-			}
-			return 1; // Return success
-		} else {
-			return "Error updating user"; // Return error if save fails
-		}
-	}
+
 	
 	function delete_user(){
 		extract($_POST);
