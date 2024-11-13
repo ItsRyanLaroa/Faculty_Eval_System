@@ -41,21 +41,22 @@ function ordinal_suffix($num) {
                 $student_id = $_SESSION['login_id'];
 
                 $evaluations = $conn->query("SELECT DISTINCT 
-                    CONCAT(f.lastname, ', ', f.firstname) AS faculty_name,
-                    sl.subject,
-                    a.year AS academic_year,
-                    CONCAT(cl.level, ' - ', cl.section) AS class_details,
-                    cl.curriculum,
-                    r.faculty_id,
-                    f.avatar
-                FROM evaluation_list r
-                LEFT JOIN subject_list sl ON r.subject_id = sl.id
-                LEFT JOIN faculty_list f ON r.faculty_id = f.id
-                LEFT JOIN class_list cl ON r.class_id = cl.id
-                LEFT JOIN academic_list a ON r.academic_id = a.id
-                WHERE r.student_id = '$student_id'
-                GROUP BY r.student_id, f.id, sl.subject, a.year, cl.id
-                ORDER BY f.lastname ASC");
+                CONCAT(f.lastname, ', ', f.firstname) AS faculty_name,
+                sl.subject,
+                a.year AS academic_year,
+                CONCAT(cl.level, ' - ', cl.section) AS class_details,
+                cl.curriculum,
+                r.faculty_id,
+                f.avatar
+            FROM evaluation_list r
+            LEFT JOIN subject_list sl ON r.subject_id = sl.id
+            LEFT JOIN faculty_list f ON r.faculty_id = f.id
+            LEFT JOIN class_list cl ON r.class_id = cl.id
+            LEFT JOIN academic_list a ON r.academic_id = a.id
+            WHERE r.student_id = '$student_id'
+            GROUP BY f.lastname, f.firstname, sl.subject, a.year, cl.level, cl.section, cl.curriculum, r.faculty_id, f.avatar
+            ORDER BY f.lastname ASC");
+            
 
                 while ($row = $evaluations->fetch_assoc()): 
                     $avatar = !empty($row['avatar']) ? 'assets/uploads/' . $row['avatar'] : 'assets/uploads/default_avatar.png';
