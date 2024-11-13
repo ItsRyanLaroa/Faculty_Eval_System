@@ -179,7 +179,7 @@ function login(){
 		}
 	}
 
-	function update_user() {
+		function update_user() {
 		extract($_POST);
 		$data = "";
 		$type = array("", "users", "faculty_list", "student_list");
@@ -187,7 +187,18 @@ function login(){
 		// Determine the unique field based on login type
 		$uniqueField = ($_SESSION['login_type'] == 3) ? 'school_id' : 'email';
 	
+		// Check if the school_id is being updated
+		if ($_SESSION['login_type'] == 3 && isset($school_id)) {
+			// Check if the new school_id is the same as the old one or if it doesn't exist in the database
+			$result = $this->db->query("SELECT id FROM {$type[$_SESSION['login_type']]} WHERE school_id = '$school_id' AND id != '$id'");
+			if ($result->num_rows > 0) {
+				return "School ID already exists"; // Return a message if the school_id already exists
+			}
+		}
+	
+		// Loop through all the post data to prepare for update
 		foreach ($_POST as $k => $v) {
+			// Skip id, password, and other unnecessary fields
 			if (!in_array($k, array('id', 'cpass', 'table', 'password')) && !is_numeric($k)) {
 				$data .= empty($data) ? " $k='$v' " : ", $k='$v' ";
 			}
@@ -224,7 +235,9 @@ function login(){
 			if (isset($_FILES['img']) && !empty($_FILES['img']['tmp_name'])) {
 				$_SESSION['login_avatar'] = $fname;
 			}
-			return 1;
+			return 1; // Return success
+		} else {
+			return "Error updating user"; // Return error if save fails
 		}
 	}
 	
