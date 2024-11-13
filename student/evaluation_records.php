@@ -47,7 +47,9 @@ function ordinal_suffix($num) {
                 CONCAT(cl.level, ' - ', cl.section) AS class_details,
                 cl.curriculum,
                 r.faculty_id,
-                f.avatar
+                f.avatar,
+                f.lastname,    -- Add this
+                f.firstname    -- Add this
             FROM evaluation_list r
             LEFT JOIN subject_list sl ON r.subject_id = sl.id
             LEFT JOIN faculty_list f ON r.faculty_id = f.id
@@ -56,6 +58,7 @@ function ordinal_suffix($num) {
             WHERE r.student_id = '$student_id'
             GROUP BY f.lastname, f.firstname, sl.subject, a.year, cl.level, cl.section, cl.curriculum, r.faculty_id, f.avatar
             ORDER BY f.lastname ASC");
+            
             
 
                 while ($row = $evaluations->fetch_assoc()): 
