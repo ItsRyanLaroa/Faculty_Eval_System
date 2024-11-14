@@ -184,7 +184,6 @@ function login(){
     $data = "";
     $type = array("", "users", "faculty_list", "student_list");
 
-    // Remove unique check for school_id or email
     // Loop through all the post data to prepare for update
     foreach ($_POST as $k => $v) {
         // Skip id, password, and other unnecessary fields
