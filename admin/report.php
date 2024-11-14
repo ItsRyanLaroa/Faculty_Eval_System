@@ -242,6 +242,8 @@ function ordinal_suffix($num) {
         function displayReport(data) {
             var reportHtml = `<h6>Total Students Evaluated: ${data.tse}</h6>`;
             reportHtml += `<h3>Overall Average Rating: ${data.averageRating}/5</h3>`;
+            reportHtml += `<h5>Feedback:</h5><p>${data.feedback}</p>`;
+            
             $('#report-content').html(reportHtml);
             $('#report-modal').modal('show');
         }
