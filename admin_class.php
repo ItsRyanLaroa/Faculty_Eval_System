@@ -701,51 +701,68 @@ function login(){
 			return 1;
 	}
 	function save_student(){
-		extract($_POST);
-		$data = "";
-		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id','cpass','password')) && !is_numeric($k)){
-				if(empty($data)){
-					$data .= " $k='$v' ";
-				}else{
-					$data .= ", $k='$v' ";
-				}
-			}
-		}
-		if(!empty($password)){
-					$data .= ", password=md5('$password') ";
+    extract($_POST);
+    $data = "";
+    foreach($_POST as $k => $v){
+        if(!in_array($k, array('id', 'cpass', 'password')) && !is_numeric($k)){
+            if(empty($data)){
+                $data .= " $k='$v' ";
+            } else {
+                $data .= ", $k='$v' ";
+            }
+        }
+    }
+    if(!empty($password)){
+        $data .= ", password=md5('$password') ";
+    }
 
-		}
-		$check = $this->db->query("SELECT * FROM student_list where email ='$email' ".(!empty($id) ? " and id != {$id} " : ''))->num_rows;
-		if($check > 0){
-			return 2;
-			exit;
-		}
-		if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
-			$fname = strtotime(date('y-m-d H:i')).'_'.$_FILES['img']['name'];
-			$move = move_uploaded_file($_FILES['img']['tmp_name'],'assets/uploads/'. $fname);
-			$data .= ", avatar = '$fname' ";
+    // Check if email is unique
+    $check = $this->db->query("SELECT * FROM student_list WHERE email ='$email' " . (!empty($id) ? " AND id != {$id} " : ''))->num_rows;
+    if($check > 0){
+        return 2;
+        exit;
+    }
 
-		}
-		if(empty($id)){
-			$save = $this->db->query("INSERT INTO student_list set $data");
-		}else{
-			$save = $this->db->query("UPDATE student_list set $data where id = $id");
-		}
+    // Handle image upload as a blob
+    $imageData = null;
+    if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
+        $imageData = file_get_contents($_FILES['img']['tmp_name']); // Read image binary data
+    }
 
-		if($save){
-			return 1;
-		}
-	}
-	// admin_class.php
-	
-	
-		function delete_student(){
-		extract($_POST);
-		$delete = $this->db->query("DELETE FROM student_list where id = ".$id);
-		if($delete)
-			return 1;
-	}
+    if(empty($id)){
+        // Insert new record with image as a BLOB
+        $stmt = $this->db->prepare("INSERT INTO student_list SET $data" . ($imageData ? ", avatar = ?" : ""));
+        if ($imageData) {
+            $stmt->bind_param('b', $imageData);
+            $stmt->send_long_data(0, $imageData);
+        }
+        $save = $stmt->execute();
+    } else {
+        // Update existing record
+        $stmt = $this->db->prepare("UPDATE student_list SET $data" . ($imageData ? ", avatar = ?" : "") . " WHERE id = ?");
+        if ($imageData) {
+            $stmt->bind_param('bi', $imageData, $id);
+            $stmt->send_long_data(0, $imageData);
+        } else {
+            $stmt->bind_param('i', $id);
+        }
+        $save = $stmt->execute();
+    }
+
+    if($save){
+        return 1;
+    }
+}
+
+// admin_class.php
+function delete_student(){
+    extract($_POST);
+    $delete = $this->db->query("DELETE FROM student_list WHERE id = ".$id);
+    if($delete) {
+        return 1;
+    }
+}
+
 	function save_task(){
 		extract($_POST);
 		$data = "";
