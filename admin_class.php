@@ -925,7 +925,7 @@ function save_evaluation() {
 	}
 	
 
-	function view_report() {
+		function view_report() {
 		extract($_POST);
 		$data = array();
 		
@@ -946,7 +946,7 @@ function save_evaluation() {
 				AND class_id = $class_id
 			)
 		");
-	
+		
 		// Fetch total evaluations
 		$answered = $this->db->query("
 			SELECT * 
@@ -956,22 +956,32 @@ function save_evaluation() {
 			AND subject_id = $subject_id 
 			AND class_id = $class_id
 		");
-		$totalQuestions=20;
+		
 		$totalRating = 0;
+		$feedbackList = [];
 		while ($row = $get->fetch_assoc()) {
-			// Sum all ratings across the questions
 			$totalRating += $row['rate'];
+			
+			// Store feedback if not empty
+			if (!empty($row['feedback']) && !in_array($row['feedback'], $feedbackList)) {
+				$feedbackList[] = $row['feedback'];
+			}
 		}
-	
+		
 		$ta = $answered->num_rows; // Total answered evaluations
-	
-		// Calculate overall average rating by dividing total rating by (totalQuestions * totalEvaluations)
+		
+		// Calculate overall average rating
 		$averageRating = ($ta > 0 && $totalQuestions > 0) ? number_format($totalRating / ($totalQuestions * $ta), 2) : 0;
-	
+		
 		$data['tse'] = $ta; // Total students evaluated
-		$data['averageRating'] = $averageRating; 
+		$data['averageRating'] = $averageRating;
+		
+		// Include only the first feedback for display
+		$data['feedback'] = !empty($feedbackList) ? $feedbackList[0] : 'No feedback available.';
+		
 		return json_encode($data);
 	}
+	
 	
 	
     public function get_detailed_report() {
