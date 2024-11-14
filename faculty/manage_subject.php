@@ -27,6 +27,7 @@ $active_academic_year = isset($active_academic['year']) ? $active_academic['year
 
 // Fetch classes and subjects associated with the faculty for the active academic year
 // Adjusted query to avoid using non-existent 'class_id' in 'subject_teacher'
+// Fetch classes and subjects associated with the faculty for the active academic year, with faculty_id in class_list and subject_teacher
 $query = "
     SELECT 
         cl.id AS class_id,
@@ -36,10 +37,12 @@ $query = "
     FROM subject_teacher st
     JOIN subject_list sl ON st.subject_id = sl.id
     JOIN class_list cl ON FIND_IN_SET(st.subject_id, cl.subject_id) > 0
-    WHERE st.faculty_id = ? AND st.academic_year = ?
+    WHERE st.faculty_id = ? 
+      AND cl.faculty_id = ? 
+      AND st.academic_year = ?
 ";
 $stmt = $conn->prepare($query);
-$stmt->bind_param("ii", $faculty_id, $active_academic_id);
+$stmt->bind_param("iii", $faculty_id, $faculty_id, $active_academic_id);
 $stmt->execute();
 $classes_and_subjects_result = $stmt->get_result();
 
