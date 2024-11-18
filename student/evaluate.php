@@ -18,11 +18,20 @@ $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
 $faculty_id = isset($_GET['fid']) ? $_GET['fid'] : '';
 $subject_id = isset($_GET['sid']) ? $_GET['sid'] : '';
 
-// Fetch restrictions with evaluations if they exist
-$restriction = $conn->query("SELECT r.id, s.id as sid, f.id as fid, concat(f.firstname, ' ', f.lastname) as faculty, s.code, s.subject, el.evaluation_id as evaluation_id
+// Fetch restrictions with evaluations if they exist and academic status is active
+$restriction = $conn->query("
+    SELECT 
+        r.id, 
+        s.id as sid, 
+        f.id as fid, 
+        concat(f.firstname, ' ', f.lastname) as faculty, 
+        s.code, 
+        s.subject, 
+        el.evaluation_id as evaluation_id
     FROM restriction_list r
     INNER JOIN faculty_list f ON f.id = r.faculty_id
     INNER JOIN subject_list s ON s.id = r.subject_id
+    INNER JOIN academic_list al ON al.id = r.academic_id AND al.status = 1
     LEFT JOIN evaluation_list el ON el.restriction_id = r.id 
         AND el.academic_id = {$_SESSION['academic']['id']} 
         AND el.student_id = {$_SESSION['login_id']}
@@ -43,48 +52,40 @@ $restriction = $conn->query("SELECT r.id, s.id as sid, f.id as fid, concat(f.fir
     .card-info.card-outline {
         border-top: 3px solid #9b0a1e !important;
     }
-
+    
     .border-info {
         border-color: #dc143c !important;
         margin-bottom: 20px;
         margin-top: 20px;
     }
 
-    .bg-gradient-secondary {
-        background: #007bff !important;
-        color: #fff;
-    }
-
-   .evaluated {
-    color: white; 
-    cursor: not-allowed; 
-    pointer-events: none; /* Disables any interaction with the element */
-    user-select: none; /* Prevents text selection */
-}
-
-.evaluated .badge {
-    cursor: not-allowed;
-}
-
-.evaluated input[type="radio"] {
-    pointer-events: none; /* Disables radio buttons */
-}
-
-.evaluated label {
-    pointer-events: none; /* Prevents clicking on the label */
-}
-
-.evaluated:hover {
-    background-color: transparent; /* Prevents hover effect */
-}
-
-    .evaluated { color: white; cursor: not-allowed; } .evaluated .badge { cursor: not-allowed; }
-
+    
     .bg-gradient-secondary {
     background: #9b0a1e !important;
     color: #fff;
 }
+    .evaluated {
+        color: white; 
+        cursor: not-allowed; 
+        pointer-events: none;
+        user-select: none;
+    }
 
+    .evaluated .badge {
+        cursor: not-allowed;
+    }
+
+    .evaluated input[type="radio"] {
+        pointer-events: none;
+    }
+
+    .evaluated label {
+        pointer-events: none;
+    }
+
+    .evaluated:hover {
+        background-color: transparent;
+    }
 </style>
 
 <div class="col-lg-12">
@@ -119,26 +120,22 @@ $restriction = $conn->query("SELECT r.id, s.id as sid, f.id as fid, concat(f.fir
             <div class="card card-outline card-info">
                 <div class="card-header">
                     <b>Evaluation Questionnaire for Academic: <?php echo $_SESSION['academic']['year'] . ' ' . (ordinal_suffix($_SESSION['academic']['semester'])) ?></b>
-                    <div class="card-tools">
-                      
-                    </div>
+                    <div class="card-tools"></div>
                 </div>
                 <div class="card-body">
                     <fieldset class="border border-info p-2 w-100">
                         <legend class="w-auto">Rating Legend</legend>
                         <p>5 = Strongly Agree, 4 = Agree, 3 = Uncertain, 2 = Disagree, 1 = Strongly Disagree</p>
                     </fieldset>
-              <!-- Additional code for Student Feedback Text Area -->
+                    
                     <form id="manage-evaluation">
                         <input type="hidden" name="class_id" value="<?php echo $_SESSION['login_class_id'] ?>">
                         <input type="hidden" name="faculty_id" value="<?php echo $faculty_id ?>">
                         <input type="hidden" name="restriction_id" value="<?php echo $rid ?>">
                         <input type="hidden" name="subject_id" value="<?php echo $subject_id ?>">
                         <input type="hidden" name="academic_id" value="<?php echo $_SESSION['academic']['id'] ?>">
-                        <div class="clear-fix mt-2"></div>
 
                         <?php 
-                        // Existing loop for criteria and questions
                         $q_arr = array();
                         $criteria = $conn->query("SELECT * FROM criteria_list WHERE id IN 
                             (SELECT criteria_id FROM question_list WHERE academic_id = {$_SESSION['academic']['id']}) 
@@ -184,19 +181,16 @@ $restriction = $conn->query("SELECT r.id, s.id as sid, f.id as fid, concat(f.fir
                         </table>
                         <?php endwhile; ?>
 
-                    <!-- Student Feedback Section -->
-                    <fieldset class="border border-info p-2 w-100 mt-4">
-                        <legend class="w-auto">Additional Feedback</legend>
-                        <p>Please provide any additional comments or feedback here:</p>
-                        <textarea name="feedback" class="form-control" rows="4" placeholder="Enter your feedback here..."></textarea>
-                    </fieldset>
+                        <fieldset class="border border-info p-2 w-100 mt-4">
+                            <legend class="w-auto">Additional Feedback</legend>
+                            <p>Please provide any additional comments or feedback here:</p>
+                            <textarea name="feedback" class="form-control" rows="4" placeholder="Enter your feedback here..."></textarea>
+                        </fieldset>
 
-                    <!-- Submit Button -->
-                    <div class="card-tools mt-3">
-                        <button class="btn btn-sm btn-flat btn-primary bg-gradient-primary mx-1" form="manage-evaluation" id="submit-evaluation" disabled>Submit Evaluation</button>
-                    </div>
-                </form>
-
+                        <div class="card-tools mt-3">
+                            <button class="btn btn-sm btn-flat btn-primary bg-gradient-primary mx-1" form="manage-evaluation" id="submit-evaluation" disabled>Submit Evaluation</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -205,11 +199,6 @@ $restriction = $conn->query("SELECT r.id, s.id as sid, f.id as fid, concat(f.fir
 
 <script>
     $(document).ready(function() {
-        $('.evaluated-link').on('click', function(e) {
-            e.preventDefault();
-            alert('This evaluation has already been completed.');
-        });
-
         function checkFormCompletion() {
             let allAnswered = true;
             $('input[type="radio"]').each(function() {
@@ -230,26 +219,14 @@ $restriction = $conn->query("SELECT r.id, s.id as sid, f.id as fid, concat(f.fir
             start_load();
             $.ajax({
                 url: 'ajax.php?action=save_evaluation',
-                method: 'POST',
                 data: $(this).serialize(),
-                success: function(response) {
-                    end_load();
-                    if (response == 1) {
-                        alert_toast("Evaluation successfully submitted.", "success");
+                method: 'POST',
+                success: function(resp) {
+                    if (resp == 1) {
+                        alert_toast("Evaluation successfully submitted", 'success');
                         setTimeout(function() {
-                            let notEvaluatedItems = $('.list-group-item').filter(function() {
-                                return !$(this).find('.badge').hasClass('evaluated');
-                            });
-                            if (notEvaluatedItems.length) {
-                                let randomItem = notEvaluatedItems.eq(Math.floor(Math.random() * notEvaluatedItems.length));
-                                let randomUrl = randomItem.attr('href');
-                                window.location.href = randomUrl;
-                            } else {
-                                alert("All evaluations are completed.");
-                            }
+                            location.reload();
                         }, 1500);
-                    } else {
-                        alert_toast("Error saving the evaluation.", "error");
                     }
                 }
             });
